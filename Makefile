@@ -3,75 +3,44 @@
 # by root670
 #
 
-DTL_T10000 = 0
+DTL_T10000 ?= 0
+EXFAT ?= 0
+HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
 
+RELDIR = release
 EE_BIN = cheatdevice.elf
-
 # For minizip
 EE_CFLAGS += -DUSE_FILE32API
 
 # Helper libraries
-OBJS += src/libraries/upng.o
-OBJS += src/libraries/ini.o
-OBJS += src/libraries/minizip/ioapi.o
-OBJS += src/libraries/minizip/zip.o
-OBJS += src/libraries/minizip/unzip.o
-OBJS += src/libraries/lzari.o
+OBJS += src/libraries/upng.o src/libraries/ini.o \
+    src/libraries/minizip/ioapi.o src/libraries/minizip/zip.o \
+    src/libraries/minizip/unzip.o src/libraries/lzari.o
 
 # Main
-OBJS += src/main.o
-OBJS += src/objectpool.o
-OBJS += src/hash.o
-OBJS += src/pad.o
-OBJS += src/util.o
-OBJS += src/startgame.o
-OBJS += src/textcheats.o
-OBJS += src/cheats.o
-OBJS += src/graphics.o
-OBJS += src/saves.o
-OBJS += src/menus.o
-OBJS += src/settings.o
+OBJS += src/main.o src/objectpool.o src/hash.o src/pad.o \
+    src/util.o src/startgame.o src/textcheats.o src/cheats.o \
+    src/graphics.o src/saves.o src/menus.o src/settings.o
 
 # Save Formats
-OBJS += src/saveformats/util.o
-OBJS += src/saveformats/cbs.o
-OBJS += src/saveformats/psu.o
-OBJS += src/saveformats/zip.o
-OBJS += src/saveformats/max.o
+OBJS += src/saveformats/util.o src/saveformats/cbs.o src/saveformats/psu.o src/saveformats/zip.o src/saveformats/max.o
 
 # IRX Modules
 IRX_OBJS += resources/usbd_irx.o
 IRX_OBJS += resources/usbhdfsd_irx.o
 IRX_OBJS += resources/iomanX_irx.o
-ifeq ($(DTL_T10000),1)
-	IRX_OBJS += resources/sio2man_irx.o
-	IRX_OBJS += resources/mcman_irx.o
-	IRX_OBJS += resources/mcserv_irx.o
-	IRC_OBJS += resources/padman_irx.o
+ifeq ($(HOMEBREW_IRX),1)
+  IRX_OBJS += resources/sio2man_irx.o resources/mcman_irx.o resources/mcserv_irx.o resources/padman_irx.o
 endif
 
 # Graphic resources
-OBJS += resources/background_png.o
-OBJS += resources/check_png.o
-OBJS += resources/hamburgerIcon_png.o
-OBJS += resources/gamepad_png.o
-OBJS += resources/cube_png.o
-OBJS += resources/savemanager_png.o
-OBJS += resources/flashdrive_png.o
-OBJS += resources/memorycard1_png.o
-OBJS += resources/memorycard2_png.o
-OBJS += resources/buttonCross_png.o
-OBJS += resources/buttonCircle_png.o
-OBJS += resources/buttonTriangle_png.o
-OBJS += resources/buttonSquare_png.o
-OBJS += resources/buttonStart_png.o
-OBJS += resources/buttonSelect_png.o
-OBJS += resources/buttonL1_png.o
-OBJS += resources/buttonL2_png.o
-OBJS += resources/buttonL3_png.o
-OBJS += resources/buttonR1_png.o
-OBJS += resources/buttonR2_png.o
-OBJS += resources/buttonR3_png.o
+OBJS += resources/background_png.o \
+    resources/check_png.o resources/hamburgerIcon_png.o resources/gamepad_png.o resources/cube_png.o \
+    resources/savemanager_png.o resources/flashdrive_png.o resources/memorycard1_png.o resources/memorycard2_png.o \
+    resources/buttonCross_png.o resources/buttonCircle_png.o resources/buttonTriangle_png.o \
+    resources/buttonSquare_png.o resources/buttonStart_png.o resources/buttonSelect_png.o \
+    resources/buttonL1_png.o resources/buttonL2_png.o resources/buttonL3_png.o \
+    resources/buttonR1_png.o resources/buttonR2_png.o resources/buttonR3_png.o
 
 # Engine
 OBJS += engine/engine_erl.o
@@ -79,11 +48,14 @@ OBJS += engine/engine_erl.o
 # Bootstrap ELF
 OBJS += bootstrap/bootstrap_elf.o
 
-ifeq ($(DTL_T10000),1)
-	EE_CFLAGS += -D_DTL_T10000 -g
+ifeq ($(HOMEBREW_IRX),1)
 	EE_LIBS += -lpadx
+	EE_CFLAGS += -DHOMEBREW_IRX
 else
 	EE_LIBS += -lpad
+endif
+ifeq ($(DTL_T10000),1)
+	EE_CFLAGS += -D_DTL_T10000 -g
 endif
 
 # Replace uses of "mass" with "host"
@@ -105,7 +77,7 @@ modules:
 	@bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
 	@bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o _usbd_irx
 	@bin2o $(PS2SDK)/iop/irx/usbhdfsd.irx resources/usbhdfsd_irx.o _usbhdfsd_irx
-ifeq ($(DTL_T10000),1)
+ifeq ($(HOMEBREW_IRX),1)
 	@bin2o $(PS2SDK)/iop/irx/freesio2.irx resources/sio2man_irx.o _sio2man_irx
 	@bin2o $(PS2SDK)/iop/irx/mcman.irx resources/mcman_irx.o _mcman_irx
 	@bin2o $(PS2SDK)/iop/irx/mcserv.irx resources/mcserv_irx.o _mcserv_irx
@@ -156,20 +128,21 @@ main: $(EE_BIN)
 	rm -f bootstrap/*.elf bootstrap/*.o
 	rm -f engine/*.erl engine/*.o
 
-release: all
-	rm -rf release
-	mkdir release
-	ps2-packer cheatdevice.elf release/cheatdevice.elf
-	zip -q -9 release/CheatDatabase.zip CheatDatabase.txt
-	cp CheatDevicePS2.ini LICENSE README.md release
-	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' release/CheatDevicePS2.ini
-	cd release && zip -q -9 CheatDevicePS2-$$(git describe).zip *
+$(RELDIR): all
+	rm -rf $(RELDIR)
+	mkdir $(RELDIR)
+	ps2-packer cheatdevice.elf $(RELDIR)/cheatdevice.elf
+	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
+	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)
+	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' $(RELDIR)/CheatDevicePS2.ini
+	cd $(RELDIR) && zip -q -9 CheatDevicePS2-$$(git describe).zip *
 
 clean:
 	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o *.elf
 	rm -f resources/*.o
 	cd engine && make clean
 	cd bootstrap && make clean
+rebuild: clean all
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal

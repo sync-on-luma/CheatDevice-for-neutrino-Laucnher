@@ -72,7 +72,7 @@ void loadModules()
     sbv_patch_enable_lmb();
     sbv_patch_disable_prefix_check();
 
-    #ifdef _DTL_T10000
+    #ifdef HOMEBREW_IRX
     SifExecModuleBuffer(_sio2man_irx_start, _sio2man_irx_size, 0, NULL, &ret);
     SifExecModuleBuffer(_padman_irx_start, _padman_irx_size, 0, NULL, &ret);
     SifExecModuleBuffer(_mcman_irx_start, _mcman_irx_size, 0, NULL, &ret);
@@ -86,9 +86,9 @@ void loadModules()
     SifExecModuleBuffer(_iomanX_irx_start, _iomanX_irx_size, 0, NULL, &ret);
     SifExecModuleBuffer(_usbd_irx_start, _usbd_irx_size, 0, NULL, &ret);
     SifExecModuleBuffer(_usbhdfsd_irx_start, _usbhdfsd_irx_size, 0, NULL, &ret);
-    sleep(1); // Allow USB devices some time to be detected
+    sleep(2); // Allow USB devices some time to be detected
 
-    #ifdef _DTL_T10000
+    #ifdef HOMEBREW_IRX
     mcInit(MC_TYPE_XMC);
     #else
     mcInit(MC_TYPE_MC);
