@@ -18,8 +18,8 @@
 #include <unistd.h>
 
 #define IMPORT_IRX(n) \
-    extern u8 n_##start[]; \
-    extern int n_##size
+    extern u8 n_##_start[]; \
+    extern int n_##_size
 
 #ifdef HOMEBREW_IRX
 IMPORT_IRX(sio2man_irx);
