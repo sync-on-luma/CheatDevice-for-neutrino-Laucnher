@@ -22,22 +22,21 @@
     extern int n_##_size
 
 #ifdef HOMEBREW_IRX
-IMPORT_IRX(_sio2man_irx);
-IMPORT_IRX(_mcman_irx);
-IMPORT_IRX(_mcserv_irx);
-IMPORT_IRX(_padman_irx);
+IMPORT_IRX(sio2man_irx);
+IMPORT_IRX(mcman_irx);
+IMPORT_IRX(mcserv_irx);
+IMPORT_IRX(padman_irx);
 #endif
 
-IMPORT_IRX(_iomanX_irx);
-IMPORT_IRX(_usbd_irx);
+IMPORT_IRX(iomanX_irx);
+IMPORT_IRX(usbd_irx);
 
 #ifdef EXFAT
-IMPORT_IRX(_bdm_irx);
-IMPORT_IRX(_bdmfs_fatfs_irx);
-IMPORT_IRX(_usbd_irx);
-IMPORT_IRX(_usbmass_bd_irx);
+IMPORT_IRX(bdm_irx);
+IMPORT_IRX(bdmfs_fatfs_irx);
+IMPORT_IRX(usbmass_bd_irx);
 #else
-IMPORT_IRX(_usbhdfsd_irx);
+IMPORT_IRX(usbhdfsd_irx);
 #endif
 
 void loadModules()
@@ -77,35 +76,35 @@ void loadModules()
     sbv_patch_enable_lmb();
     sbv_patch_disable_prefix_check();
 
-    #ifdef HOMEBREW_IRX
-    SifExecModuleBuffer(_sio2man_irx_start, _sio2man_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_padman_irx_start, _padman_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_mcman_irx_start, _mcman_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_mcserv_irx_start, _mcserv_irx_size, 0, NULL, &ret);
-    #else
+#ifdef HOMEBREW_IRX
+    SifExecModuleBuffer(sio2man_irx_start, sio2man_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(padman_irx_start, padman_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(mcman_irx_start, mcman_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(mcserv_irx_start, mcserv_irx_size, 0, NULL, &ret);
+#else
     SifLoadModule("rom0:SIO2MAN", 0, NULL);
     SifLoadModule("rom0:PADMAN", 0, NULL);
     SifLoadModule("rom0:MCMAN", 0, NULL);
     SifLoadModule("rom0:MCSERV", 0, NULL);
-    #endif
-    SifExecModuleBuffer(_iomanX_irx_start, _iomanX_irx_size, 0, NULL, &ret);
+#endif
+    SifExecModuleBuffer(iomanX_irx_start, iomanX_irx_size, 0, NULL, &ret);
 #ifdef EXFAT
-    SifExecModuleBuffer(_bdm_irx_start,         _bdm_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_bdmfs_fatfs_irx_start, _bdmfs_fatfs_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_usbd_irx_start,        _usbd_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_usbmass_bd_irx_start,  _usbmass_bd_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(bdm_irx_start,         bdm_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(bdmfs_fatfs_irx_start, bdmfs_fatfs_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(usbd_irx_start,        usbd_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(usbmass_bd_irx_start,  usbmass_bd_irx_size, 0, NULL, &ret);
     sleep(3); // Allow USB devices some time to be detected
 #else
-    SifExecModuleBuffer(_usbd_irx_start, _usbd_irx_size, 0, NULL, &ret);
-    SifExecModuleBuffer(_usbhdfsd_irx_start, _usbhdfsd_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(usbd_irx_start, usbd_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(usbhdfsd_irx_start, usbhdfsd_irx_size, 0, NULL, &ret);
     sleep(2); // Allow USB devices some time to be detected
 #endif
 
-    #ifdef HOMEBREW_IRX
+#ifdef HOMEBREW_IRX
     mcInit(MC_TYPE_XMC);
-    #else
+#else
     mcInit(MC_TYPE_MC);
-    #endif
+#endif
 
     padInitialize();
 }
