@@ -17,26 +17,32 @@
 #include <libmc.h>
 #include <unistd.h>
 
-#define IMPORT_IRX(n) \
-    extern u8 n_##start[]; \
-    extern int n_##size
 
 #ifdef HOMEBREW_IRX
-IMPORT_IRX(sio2man_irx);
-IMPORT_IRX(mcman_irx);
-IMPORT_IRX(mcserv_irx);
-IMPORT_IRX(padman_irx);
+extern u8  _sio2man_irx_start[];
+extern int _sio2man_irx_size;
+extern u8  _mcman_irx_start[];
+extern int _mcman_irx_size;
+extern u8  _mcserv_irx_start[];
+extern int _mcserv_irx_size;
+extern u8  _padman_irx_start[];
+extern int _padman_irx_size;
 #endif
-
-IMPORT_IRX(iomanX_irx);
-IMPORT_IRX(usbd_irx);
+extern u8  _iomanX_irx_start[];
+extern int _iomanX_irx_size;
+extern u8  _usbd_irx_start[];
+extern int _usbd_irx_size;
 
 #ifdef EXFAT
-IMPORT_IRX(bdm_irx);
-IMPORT_IRX(bdmfs_fatfs_irx);
-IMPORT_IRX(usbmass_bd_irx);
+extern u8  _bdm_irx_start[];
+extern int _bdm_irx__size;
+extern u8  _bdmfs_fatfs_irx_start[];
+extern int _bdmfs_fatfs_irx_size;
+extern u8  _usbmass_bd_irx_start[];
+extern int _usbmass_bd_irx_size;
 #else
-IMPORT_IRX(usbhdfsd_irx);
+extern u8  _usbhdfsd_irx_start[];
+extern int _usbhdfsd_irx_size;
 #endif
 
 void loadModules()
