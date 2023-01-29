@@ -150,7 +150,7 @@ $(RELDIR): all
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
 	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)
 	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' $(RELDIR)/CheatDevicePS2.ini
-	cd $(RELDIR) && zip -q -9 CheatDevicePS2-$(shell git describe)$(HAS_EXFAT).zip *
+	cd $(RELDIR) && zip -q -9 CheatDevicePS2$(HAS_EXFAT).zip *
 
 clean:
 	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o $(EE_BIN) $(RELDIR)/$(EE_BIN)
