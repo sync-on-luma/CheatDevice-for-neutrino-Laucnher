@@ -80,7 +80,7 @@ endif
 GSKIT = $(PS2DEV)/gsKit
 EE_LIBS += -lgskit_toolkit -lgskit -ldmakit -lc -lkernel -lmc -lpatches -lerl -lcdvd -lz -lmf
 EE_LDFLAGS += -L$(PS2SDK)/ee/lib -L$(PS2SDK)/ports/lib -L$(GSKIT)/lib -s
-EE_INCS += -I$(GSKIT)/include -I$(PS2SDK)/ports/include
+EE_INCS += -I$(GSKIT)/include -I$(PS2SDK)/ports/include -Iinclude
 
 EE_OBJS = $(IRX_OBJS) $(OBJS)
 
