@@ -16,9 +16,9 @@
 #include <sbv_patches.h>
 #include <libmc.h>
 #include <unistd.h>
-#define IMPORT_IRX(_n) \
-    extern u8 _n_##_start[]; \
-    extern unt _n_##_size
+#define IMPORT_IRX(n) \
+    extern u8 n_##_start[]; \
+    extern unt n_##_size
 
 #ifdef HOMEBREW_IRX
 IMPORT_IRX(_sio2man_irx);
