@@ -30,6 +30,10 @@ jobs:
       run: |
         make rebuild ${{ matrix.exfat }}
 
+    - name: list
+      run: |
+        ls -R
+
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
@@ -45,6 +49,10 @@ jobs:
 
     - name: Download all artifacts
       uses: actions/download-artifact@v3
+
+    - name: list
+      run: |
+        ls -R
 
     - name: Create release
       if: github.ref == 'refs/heads/master'
