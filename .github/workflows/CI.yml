@@ -30,11 +30,11 @@ jobs:
       run: |
         make rebuild ${{ matrix.exfat }}
 
-    - name: Upload variants artifact ELF
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ github.event.repository.name }}
-        path: release/*.ELF
+        path: release/*.zip
     
 ####################################################### 
   release:
@@ -54,5 +54,5 @@ jobs:
         automatic_release_tag: "latest"
         title: "Latest automated build"
         files: |
-               ${{ github.event.repository.name }}/*.ELF
+               ${{ github.event.repository.name }}/CheatDevicePS2*.zip
                

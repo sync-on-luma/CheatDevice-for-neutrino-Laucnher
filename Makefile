@@ -142,6 +142,7 @@ clean:
 	rm -f resources/*.o
 	cd engine && make clean
 	cd bootstrap && make clean
+
 rebuild: clean all
 
 include $(PS2SDK)/samples/Makefile.pref
