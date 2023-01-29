@@ -53,7 +53,7 @@ static void getINIString(struct ini_info *ini, char **dst, const char *keyName, 
     else
         *dst = defaultValue ? strdup(defaultValue) : NULL;
 
-    DPRINTF("getINIString: %s = %s\n", keyName, *dst);
+    DPRINTF("%s: %s = %s\n", __FUNCTION__, keyName, *dst);
 }
 
 static void migrateOldDatabaseSetting()

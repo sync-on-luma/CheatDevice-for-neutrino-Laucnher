@@ -852,6 +852,8 @@ void graphicsDrawAboutPage()
         "Cheat Device " GIT_VERSION "\n"
         "Compiled " __DATE__ " " __TIME__ "\n"
         "\n"
+        "EXFAT support and minor tweaks by El_isra\n"
+        "\n"
         "Total Games: %d\n"
         "Total Cheats: %d\n"
         "Read-Only Database: %s\n"

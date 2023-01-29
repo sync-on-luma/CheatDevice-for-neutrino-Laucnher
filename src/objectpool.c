@@ -98,7 +98,7 @@ int objectPoolRelease(objectPoolType_t type, void *ptr)
     {
         memset(ptr, 0, pools[type].objectSize);
         
-        DPRINTF("objectPoolRelease: Adding %p to freelist\n", ptr);
+        DPRINTF("%s: Adding %p to freelist\n", __FUNCTION__, ptr);
         freeList_t *temp = malloc(sizeof(freeList_t));
         temp->ptr = ptr;
         temp->next = pools[type].freeList;

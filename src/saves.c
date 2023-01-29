@@ -196,7 +196,7 @@ gameSave_t *savesGetSaves(device_t dev)
             handler = getSaveHandler(record.name);
             if(!handler)
             {
-                DPRINTF("Ignoring file \"%s\"\n", record.name);
+                DPRINTF("%s: Ignoring file \"%s\"\n", __FUNCTION__, record.name);
                 continue;
             }
 
@@ -337,7 +337,7 @@ int savesGetAvailableDevices()
     if(ret == 0 || ret == -1)
     {
         available |= MC_SLOT_1;
-        DPRINTF("mem card slot 1 available\n");
+        DPRINTF("%s: mem card slot 1 available\n", __FUNCTION__);
     }
     s_mc1Free = mcFree;
 
@@ -347,7 +347,7 @@ int savesGetAvailableDevices()
     if(ret == 0 || ret == -1)
     {
         available |= MC_SLOT_2;
-        DPRINTF("mem card slot 2 available\n");
+        DPRINTF("%s: mem card slot 2 available\n", __FUNCTION__);
     }
     s_mc2Free = mcFree;
     
