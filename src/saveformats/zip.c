@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <libmc.h>
 
 #include "zip.h"
@@ -40,7 +41,7 @@ int extractZIP(gameSave_t *save, device_t dst)
     }
 
     unzGetCurrentFileInfo(zf, &fileInfo, fileName, 100, NULL, 0, NULL, 0);
-    printf("Filename: %s\n", fileName);
+    DPRINTF("Filename: %s\n", fileName);
 
     strcpy(dirNameTemp, fileName);
 
@@ -48,7 +49,7 @@ int extractZIP(gameSave_t *save, device_t dst)
     if (ptr)
         dirNameTemp[(unsigned int)(ptr - dirNameTemp)] = 0;
 
-    printf("Directory name: %s\n", dirNameTemp);
+    DPRINTF("Directory name: %s\n", dirNameTemp);
 
     dirName = savesGetDevicePath(dirNameTemp, dst);
     int ret = fioMkdir(dirName);
@@ -82,12 +83,12 @@ int extractZIP(gameSave_t *save, device_t dst)
         ptr = strstr(fileName, "/");
         snprintf(dstName, 100, "%s/%s", dirName, (ptr) ? ptr + 1 : fileName);
 
-        printf("Writing %s...", dstName);
+        DPRINTF("Writing %s...", dstName);
 
         dstFile = fopen(dstName, "wb");
         if(!dstFile)
         {
-            printf(" failed!!!\n");
+            DPRINTF(" failed!!!\n");
             unzClose(zf);
             free(dirName);
             free(data);
@@ -97,7 +98,7 @@ int extractZIP(gameSave_t *save, device_t dst)
         fclose(dstFile);
         free(data);
 
-        printf(" done!\n");
+        DPRINTF(" done!\n");
     } while(unzGoToNextFile(zf) != UNZ_END_OF_LIST_OF_FILE);
 
     free(dirName);

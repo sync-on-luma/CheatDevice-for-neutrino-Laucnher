@@ -26,7 +26,7 @@
 #  define PRINTF  _cprintf
 #  define VPRINTF _vcprintf
 #else
-#  define PRINTF  printf
+#  define PRINTF  DPRINTF
 #  define VPRINTF vprintf
 #endif
 

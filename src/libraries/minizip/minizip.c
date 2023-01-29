@@ -13,6 +13,7 @@
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
 */
+#include "dbgprintf.h"
 
 #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
 #  ifndef __USE_FILE_OFFSET64
@@ -144,7 +145,7 @@ int is_large_file(const char* filename)
     pos = FTELLO_FUNC(pFile);
     fclose(pFile);
 
-    printf("File : %s is %lld bytes\n", filename, pos);
+    DPRINTF("File : %s is %lld bytes\n", filename, pos);
 
     return (pos >= 0xffffffff);
 }
@@ -168,7 +169,7 @@ int get_file_crc(const char* filenameinzip, void *buf, unsigned long size_buf, u
 
             if ((size_read < size_buf) && (feof(fin) == 0))
             {
-                printf("error in reading %s\n",filenameinzip);
+                DPRINTF("error in reading %s\n",filenameinzip);
                 err = ZIP_ERRNO;
             }
 
@@ -181,20 +182,20 @@ int get_file_crc(const char* filenameinzip, void *buf, unsigned long size_buf, u
     if (fin)
         fclose(fin);
 
-    printf("file %s crc %lx\n", filenameinzip, calculate_crc);
+    DPRINTF("file %s crc %lx\n", filenameinzip, calculate_crc);
     *result_crc = calculate_crc;
     return err;
 }
 
 void do_banner()
 {
-    printf("MiniZip 1.1, demo of zLib + MiniZip64 package, written by Gilles Vollant\n");
-    printf("more info on MiniZip at http://www.winimage.com/zLibDll/minizip.html\n\n");
+    DPRINTF("MiniZip 1.1, demo of zLib + MiniZip64 package, written by Gilles Vollant\n");
+    DPRINTF("more info on MiniZip at http://www.winimage.com/zLibDll/minizip.html\n\n");
 }
 
 void do_help()
 {
-    printf("Usage : minizip [-o] [-a] [-0 to -9] [-p password] [-j] file.zip [files_to_add]\n\n" \
+    DPRINTF("Usage : minizip [-o] [-a] [-0 to -9] [-p password] [-j] file.zip [files_to_add]\n\n" \
            "  -o  Overwrite existing file.zip\n" \
            "  -a  Append to existing file.zip\n" \
            "  -0  Store only\n" \
@@ -271,7 +272,7 @@ int main(int argc, char *argv[])
     buf = (void*)malloc(size_buf);
     if (buf == NULL)
     {
-        printf("Error allocating memory\n");
+        DPRINTF("Error allocating memory\n");
         return ZIP_INTERNALERROR;
     }
 
@@ -290,7 +291,7 @@ int main(int argc, char *argv[])
             do
             {
                 char answer[128];
-                printf("The file %s exists. Overwrite ? [y]es, [n]o, [a]ppend : ", zipfilename);
+                DPRINTF("The file %s exists. Overwrite ? [y]es, [n]o, [a]ppend : ", zipfilename);
                 if (scanf("%1s", answer) != 1)
                     exit(EXIT_FAILURE);
                 rep = answer[0];
@@ -320,11 +321,11 @@ int main(int argc, char *argv[])
 
     if (zf == NULL)
     {
-        printf("error opening %s\n", zipfilename);
+        DPRINTF("error opening %s\n", zipfilename);
         err = ZIP_ERRNO;
     }
     else
-        printf("creating %s\n", zipfilename);
+        DPRINTF("creating %s\n", zipfilename);
 
     /* Go through command line args looking for files to add to zip */
     for (i = zipfilenamearg + 1; (i < argc) && (err == ZIP_OK); i++)
@@ -384,14 +385,14 @@ int main(int argc, char *argv[])
                     password, crcFile, zip64);
 
         if (err != ZIP_OK)
-            printf("error in opening %s in zipfile (%d)\n", filenameinzip, err);
+            DPRINTF("error in opening %s in zipfile (%d)\n", filenameinzip, err);
         else
         {
             fin = FOPEN_FUNC(filenameinzip, "rb");
             if (fin == NULL)
             {
                 err = ZIP_ERRNO;
-                printf("error in opening %s for reading\n", filenameinzip);
+                DPRINTF("error in opening %s for reading\n", filenameinzip);
             }
         }
 
@@ -403,7 +404,7 @@ int main(int argc, char *argv[])
                 size_read = (int)fread(buf, 1, size_buf, fin);
                 if ((size_read < size_buf) && (feof(fin) == 0))
                 {
-                    printf("error in reading %s\n",filenameinzip);
+                    DPRINTF("error in reading %s\n",filenameinzip);
                     err = ZIP_ERRNO;
                 }
 
@@ -411,7 +412,7 @@ int main(int argc, char *argv[])
                 {
                     err = zipWriteInFileInZip(zf, buf, size_read);
                     if (err < 0)
-                        printf("error in writing %s in the zipfile (%d)\n", filenameinzip, err);
+                        DPRINTF("error in writing %s in the zipfile (%d)\n", filenameinzip, err);
                 }
             }
             while ((err == ZIP_OK) && (size_read > 0));
@@ -426,13 +427,13 @@ int main(int argc, char *argv[])
         {
             err = zipCloseFileInZip(zf);
             if (err != ZIP_OK)
-                printf("error in closing %s in the zipfile (%d)\n", filenameinzip, err);
+                DPRINTF("error in closing %s in the zipfile (%d)\n", filenameinzip, err);
         }
     }
 
     errclose = zipClose(zf, NULL);
     if (errclose != ZIP_OK)
-        printf("error in closing %s (%d)\n", zipfilename, errclose);
+        DPRINTF("error in closing %s (%d)\n", zipfilename, errclose);
 
     free(buf);
     return err;

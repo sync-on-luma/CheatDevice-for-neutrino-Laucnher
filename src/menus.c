@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <malloc.h>
 
@@ -74,7 +75,7 @@ int menuInsertItem(menuItem_t *item)
         if(activeMenu->numItems == (activeMenu->numChunks * CHUNK_SIZE))
         {
             activeMenu->numChunks++;
-            printf("increasing menu size to %d chunks\n", activeMenu->numChunks);
+            DPRINTF("increasing menu size to %d chunks\n", activeMenu->numChunks);
             activeMenu->items = realloc(activeMenu->items, CHUNK_SIZE * sizeof(menuItem_t *) * activeMenu->numChunks);
         }
 

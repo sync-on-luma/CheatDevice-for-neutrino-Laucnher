@@ -13,6 +13,7 @@
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
 */
+#include "dbgprintf.h"
 
 #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
 #  ifndef __USE_FILE_OFFSET64
@@ -132,7 +133,7 @@ int makedir(const char *newdir)
     buffer = (char*)malloc(len+1);
     if (buffer == NULL)
     {
-        printf("Error allocating memory\n");
+        DPRINTF("Error allocating memory\n");
         return UNZ_INTERNALERROR;
     }
 
@@ -158,7 +159,7 @@ int makedir(const char *newdir)
 
         if ((MKDIR(buffer) == -1) && (errno == ENOENT))
         {
-            printf("couldn't create directory %s (%d)\n", buffer, errno);
+            DPRINTF("couldn't create directory %s (%d)\n", buffer, errno);
             free(buffer);
             return 0;
         }
@@ -194,19 +195,19 @@ void display_zpos64(ZPOS64_T n, int size_char)
 
     size_display_string -= pos_string;
     while (size_char-- > size_display_string)
-        printf(" ");
-    printf("%s",&number[pos_string]);
+        DPRINTF(" ");
+    DPRINTF("%s",&number[pos_string]);
 }
 
 void do_banner()
 {
-    printf("MiniUnz 1.01b, demo of zLib + Unz package written by Gilles Vollant\n");
-    printf("more info at http://www.winimage.com/zLibDll/minizip.html\n\n");
+    DPRINTF("MiniUnz 1.01b, demo of zLib + Unz package written by Gilles Vollant\n");
+    DPRINTF("more info at http://www.winimage.com/zLibDll/minizip.html\n\n");
 }
 
 void do_help()
 {
-    printf("Usage : miniunz [-e] [-x] [-v] [-l] [-o] [-p password] file.zip [file_to_extr.] [-d extractdir]\n\n" \
+    DPRINTF("Usage : miniunz [-e] [-x] [-v] [-l] [-o] [-p password] file.zip [file_to_extr.] [-d extractdir]\n\n" \
            "  -e  Extract without pathname (junk paths)\n" \
            "  -x  Extract with pathname\n" \
            "  -v  list files\n" \
@@ -221,12 +222,12 @@ int do_list(unzFile uf)
     int err = unzGoToFirstFile(uf);
     if (err != UNZ_OK)
     {
-        printf("error %d with zipfile in unzGoToFirstFile\n", err);
+        DPRINTF("error %d with zipfile in unzGoToFirstFile\n", err);
         return 1;
     }
 
-    printf("  Length  Method     Size Ratio   Date    Time   CRC-32     Name\n");
-    printf("  ------  ------     ---- -----   ----    ----   ------     ----\n");
+    DPRINTF("  Length  Method     Size Ratio   Date    Time   CRC-32     Name\n");
+    DPRINTF("  ------  ------     ---- -----   ----    ----   ------     ----\n");
 
     do
     {
@@ -239,7 +240,7 @@ int do_list(unzFile uf)
         err = unzGetCurrentFileInfo64(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
         if (err != UNZ_OK)
         {
-            printf("error %d with zipfile in unzGetCurrentFileInfo\n", err);
+            DPRINTF("error %d with zipfile in unzGetCurrentFileInfo\n", err);
             break;
         }
 
@@ -272,9 +273,9 @@ int do_list(unzFile uf)
             string_method = "Unkn. ";
 
         display_zpos64(file_info.uncompressed_size, 7);
-        printf("  %6s%c", string_method, charCrypt);
+        DPRINTF("  %6s%c", string_method, charCrypt);
         display_zpos64(file_info.compressed_size, 7);
-        printf(" %3lu%%  %2.2lu-%2.2lu-%2.2lu  %2.2lu:%2.2lu  %8.8lx   %s\n", ratio,
+        DPRINTF(" %3lu%%  %2.2lu-%2.2lu-%2.2lu  %2.2lu:%2.2lu  %8.8lx   %s\n", ratio,
                 (uLong)file_info.tmu_date.tm_mon + 1, (uLong)file_info.tmu_date.tm_mday,
                 (uLong)file_info.tmu_date.tm_year % 100,
                 (uLong)file_info.tmu_date.tm_hour, (uLong)file_info.tmu_date.tm_min,
@@ -285,7 +286,7 @@ int do_list(unzFile uf)
     while (err == UNZ_OK);
 
     if (err != UNZ_END_OF_LIST_OF_FILE && err != UNZ_OK) {
-        printf("error %d with zipfile in unzGoToNextFile\n", err);
+        DPRINTF("error %d with zipfile in unzGoToNextFile\n", err);
         return err;
     }
 
@@ -309,7 +310,7 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
     err = unzGetCurrentFileInfo64(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
     if (err != UNZ_OK)
     {
-        printf("error %d with zipfile in unzGetCurrentFileInfo\n",err);
+        DPRINTF("error %d with zipfile in unzGetCurrentFileInfo\n",err);
         return err;
     }
 
@@ -326,7 +327,7 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
     {
         if (opt_extract_without_path == 0)
         {
-            printf("creating directory: %s\n", filename_inzip);
+            DPRINTF("creating directory: %s\n", filename_inzip);
             MKDIR(filename_inzip);
         }
         return err;
@@ -335,13 +336,13 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
     buf = (void*)malloc(size_buf);
     if (buf == NULL)
     {
-        printf("Error allocating memory\n");
+        DPRINTF("Error allocating memory\n");
         return UNZ_INTERNALERROR;
     }
 
     err = unzOpenCurrentFilePassword(uf, password);
     if (err != UNZ_OK)
-        printf("error %d with zipfile in unzOpenCurrentFilePassword\n", err);
+        DPRINTF("error %d with zipfile in unzOpenCurrentFilePassword\n", err);
 
     if (opt_extract_without_path)
         write_filename = filename_withoutpath;
@@ -355,7 +356,7 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
         do
         {
             char answer[128];
-            printf("The file %s exists. Overwrite ? [y]es, [n]o, [A]ll: ", write_filename);
+            DPRINTF("The file %s exists. Overwrite ? [y]es, [n]o, [A]ll: ", write_filename);
             if (scanf("%1s", answer) != 1)
                 exit(EXIT_FAILURE);
             rep = answer[0];
@@ -385,27 +386,27 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
             fout = FOPEN_FUNC(write_filename, "wb");
         }
         if (fout == NULL)
-            printf("error opening %s\n", write_filename);
+            DPRINTF("error opening %s\n", write_filename);
     }
 
     /* Read from the zip, unzip to buffer, and write to disk */
     if (fout != NULL)
     {
-        printf(" extracting: %s\n", write_filename);
+        DPRINTF(" extracting: %s\n", write_filename);
 
         do
         {
             err = unzReadCurrentFile(uf, buf, size_buf);
             if (err < 0)
             {
-                printf("error %d with zipfile in unzReadCurrentFile\n", err);
+                DPRINTF("error %d with zipfile in unzReadCurrentFile\n", err);
                 break;
             }
             if (err == 0)
                 break;
             if (fwrite(buf, err, 1, fout) != 1)
             {
-                printf("error %d in writing extracted file\n", errno);
+                DPRINTF("error %d in writing extracted file\n", errno);
                 err = UNZ_ERRNO;
                 break;
             }
@@ -422,7 +423,7 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
 
     errclose = unzCloseCurrentFile(uf);
     if (errclose != UNZ_OK)
-        printf("error %d with zipfile in unzCloseCurrentFile\n", errclose);
+        DPRINTF("error %d with zipfile in unzCloseCurrentFile\n", errclose);
 
     free(buf);
     return err;
@@ -433,7 +434,7 @@ int do_extract_all(unzFile uf, int opt_extract_without_path, int opt_overwrite, 
     int err = unzGoToFirstFile(uf);
     if (err != UNZ_OK)
     {
-        printf("error %d with zipfile in unzGoToFirstFile\n", err);
+        DPRINTF("error %d with zipfile in unzGoToFirstFile\n", err);
         return 1;
     }
 
@@ -448,7 +449,7 @@ int do_extract_all(unzFile uf, int opt_extract_without_path, int opt_overwrite, 
 
     if (err != UNZ_END_OF_LIST_OF_FILE)
     {
-        printf("error %d with zipfile in unzGoToNextFile\n", err);
+        DPRINTF("error %d with zipfile in unzGoToNextFile\n", err);
         return 1;
     }
     return 0;
@@ -459,7 +460,7 @@ int do_extract_onefile(unzFile uf, const char* filename, int opt_extract_without
 {
     if (unzLocateFile(uf, filename, NULL) != UNZ_OK)
     {
-        printf("file %s not found in the zipfile\n", filename);
+        DPRINTF("file %s not found in the zipfile\n", filename);
         return 2;
     }
     if (do_extract_currentfile(uf, opt_extract_without_path, &opt_overwrite, password) == UNZ_OK)
@@ -545,11 +546,11 @@ int main(int argc, const char *argv[])
 
     if (uf == NULL)
     {
-        printf("Cannot open %s\n", zipfilename);
+        DPRINTF("Cannot open %s\n", zipfilename);
         return 1;
     }
 
-    printf("%s opened\n", zipfilename);
+    DPRINTF("%s opened\n", zipfilename);
 
     /* Process command line options */
     if (opt_do_list == 1)
@@ -560,7 +561,7 @@ int main(int argc, const char *argv[])
     {
         if (opt_extractdir && CHDIR(dirname))
         {
-            printf("Error changing into %s, aborting\n", dirname);
+            DPRINTF("Error changing into %s, aborting\n", dirname);
             exit(-1);
         }
 

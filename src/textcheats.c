@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -354,7 +355,7 @@ int textCheatsSave(const char *path, const cheatsGame_t *games, char *error, int
 
     fclose(f);
     clock_t end = clock();
-    printf("Saving took %f seconds\n", ((float)end - start) / CLOCKS_PER_SEC);
+    DPRINTF("Saving took %f seconds\n", ((float)end - start) / CLOCKS_PER_SEC);
 
     return 1;
 }
@@ -801,7 +802,7 @@ static int readMapStartLine(const char *line, int len)
         if(g_ctx.game->numValueMaps >= MAX_VALUE_MAPS)
         {
             // Exceeded maximum number of value maps for this game
-            printf("Exceeded maximum number of value maps for this game (%d)\n", MAX_VALUE_MAPS);
+            DPRINTF("Exceeded maximum number of value maps for this game (%d)\n", MAX_VALUE_MAPS);
             return 0;
         }
 
@@ -838,7 +839,7 @@ static inline int readMapEntryLine(const char *line, int len)
 
     if(!g_ctx.valueMap)
     {
-        printf("Value map list not set\n");
+        DPRINTF("Value map list not set\n");
         return 0;
     }
 
@@ -862,7 +863,7 @@ static inline int readMapEntryLine(const char *line, int len)
 
     if(*c != ':' && *c != '=' && *c != '-')
     {
-        printf("invalid seperator character (%c)\n", *c);
+        DPRINTF("invalid seperator character (%c)\n", *c);
         return 0; // Valid seperator not found
     }
 
@@ -1072,7 +1073,7 @@ static int readTextCheats(char *text, size_t len)
     }
 
     clock_t end = clock();
-    printf("Loading took %f seconds\n", ((float)end - start) / CLOCKS_PER_SEC);
+    DPRINTF("Loading took %f seconds\n", ((float)end - start) / CLOCKS_PER_SEC);
 
     return 1;
 }

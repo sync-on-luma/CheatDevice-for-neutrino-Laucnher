@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <debug.h>
 #include <kernel.h>
 #include <stdio.h>
@@ -69,7 +70,7 @@ static const char *HELP_TICKER_CODES_NONE = \
 
 int killCheats()
 {
-    printf("\n ** Killing Cheats **\n");
+    DPRINTF("\n ** Killing Cheats **\n");
 
     objectPoolKill();
     hashDestroyTable(gameHashes);
@@ -737,7 +738,7 @@ int cheatsOpenDatabase(const char* path, int readOnly)
     if(!handler->open(path, &gamesAdded, &numGamesAdded))
         return 0;
 
-    printf("Added %d games from %s\n", numGamesAdded, path);
+    DPRINTF("Added %d games from %s\n", numGamesAdded, path);
 
     if(readOnly)
     {
@@ -1300,22 +1301,22 @@ void SetupERL()
     erl = load_erl_from_mem_to_addr(_engine_erl_start, 0x00080000, 0, NULL);
     if(!erl)
     {
-        printf("Error loading cheat engine ERL!\n");
+        DPRINTF("Error loading cheat engine ERL!\n");
         SleepThread();
     }
 
     erl->flags |= ERL_FLAG_CLEAR;
     FlushCache(0);
 
-    printf("Installed cheat engine ERL. Getting symbols...\n");
+    DPRINTF("Installed cheat engine ERL. Getting symbols...\n");
     struct symbol_t *sym;
     #define GET_SYMBOL(var, name) \
     sym = erl_find_local_symbol(name, erl); \
     if (sym == NULL) { \
-        printf("%s: could not find symbol '%s'\n", __FUNCTION__, name); \
+        DPRINTF("%s: could not find symbol '%s'\n", __FUNCTION__, name); \
         SleepThread(); \
     } \
-    printf("%08x %s\n", (u32)sym->address, name); \
+    DPRINTF("%08x %s\n", (u32)sym->address, name); \
     var = (typeof(var))sym->address
 
     GET_SYMBOL(get_max_hooks, "get_max_hooks");
@@ -1328,7 +1329,7 @@ void SetupERL()
     GET_SYMBOL(add_code, "add_code");
     GET_SYMBOL(clear_codes, "clear_codes");
 
-    printf("Symbols loaded.\n");
+    DPRINTF("Symbols loaded.\n");
 }
 
 static void readCodes(cheatsCheat_t *cheats)
@@ -1380,12 +1381,12 @@ static void readCodes(cheatsCheat_t *cheats)
 
             if(((addr & 0xfe000000) == 0x90000000) && nextCodeCanBeHook)
             {
-                printf("hook: %08X %08X\n", addr, val);
+                DPRINTF("hook: %08X %08X\n", addr, val);
                 add_hook(addr, val);
             }
             else
             {
-                printf("code: %08X %08X\n", addr, val);
+                DPRINTF("code: %08X %08X\n", addr, val);
                 add_code(addr, val);
             }
 
@@ -1414,9 +1415,9 @@ void cheatsInstallCodesForEngine()
         fwrite(&gameHash, 4, 1, historyFile);
     }
 
-    printf("Setting up codes for code engine\n");
+    DPRINTF("Setting up codes for code engine\n");
     readCodes(activeGame->cheats);
-    printf("Done setting up codes\n");
+    DPRINTF("Done setting up codes\n");
 
     if(historyFile)
         fclose(historyFile);

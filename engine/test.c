@@ -20,7 +20,7 @@
  *
  * $Id$
  */
-
+#include "dbgprintf.h"
 #include <tamtypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -63,7 +63,7 @@ static int test_type_0(void)
     CodeHandler();
 
     if (p[0] != 0x78563412) {
-        printf("test for type 0 failed\n");
+        DPRINTF("test for type 0 failed\n");
         return -1;
     }
 
@@ -82,7 +82,7 @@ static int test_type_1(void)
     CodeHandler();
 
     if (p[0] != 0x56781234) {
-        printf("test for type 1 failed\n");
+        DPRINTF("test for type 1 failed\n");
         return -1;
     }
 
@@ -102,7 +102,7 @@ static int test_type_2(void)
     CodeHandler();
 
     if (p[0] != 0x12345678 || p[1] != 0x9abcdef0) {
-        printf("test for type 2 failed\n");
+        DPRINTF("test for type 2 failed\n");
         return -1;
     }
 
@@ -129,7 +129,7 @@ static int test_type_3(void)
     CodeHandler();
 
     if (p[0] != 0x3333337e || p[1] != 0x33330951 || p[2] != 0xd269dd70) {
-        printf("test for type 3 failed\n");
+        DPRINTF("test for type 3 failed\n");
         return -1;
     }
 
@@ -149,7 +149,7 @@ static int test_type_4(void)
 
     if (p[0] != 0x80000000 || p[2] != 0x80100000 ||
         p[4] != 0x80200000 || p[6] != 0x80300000) {
-        printf("test for type 4 failed\n");
+        DPRINTF("test for type 4 failed\n");
         return -1;
     }
 
@@ -171,7 +171,7 @@ static int test_type_5(void)
     CodeHandler();
 
     if (memcmp(source, dest, sizeof(source))) {
-        printf("test for type 5 failed\n");
+        DPRINTF("test for type 5 failed\n");
         return -1;
     }
 
@@ -196,7 +196,7 @@ static int test_type_6(void)
     CodeHandler();
 
     if (p[2] != 0x1234ff12 || p[3] != 0x12345678) {
-        printf("test for type 6 failed\n");
+        DPRINTF("test for type 6 failed\n");
         return -1;
     }
 
@@ -220,7 +220,7 @@ static int test_type_7(void)
     CodeHandler();
 
     if (p[0] != 0x562e507e || p[1] != 0x56561c3a) {
-        printf("test for type 7 failed\n");
+        DPRINTF("test for type 7 failed\n");
         return -1;
     }
 
@@ -240,7 +240,7 @@ static int test_type_c(void)
     CodeHandler();
 
     if (p[1] != 0xffffffff || p[2] != 0xffffffff) {
-        printf("test #1 for type C failed\n");
+        DPRINTF("test #1 for type C failed\n");
         return -1;
     }
 
@@ -248,7 +248,7 @@ static int test_type_c(void)
     CodeHandler();
 
     if (p[1] != 0x11111111 || p[2] != 0x22222222) {
-        printf("test #2 for type C failed\n");
+        DPRINTF("test #2 for type C failed\n");
         return -1;
     }
 
@@ -290,7 +290,7 @@ static int test_type_d(void)
     CodeHandler();
 
     if (p[8] != 0x1234) {
-        printf("test for type D failed\n");
+        DPRINTF("test for type D failed\n");
         return -1;
     }
 
@@ -332,7 +332,7 @@ static int test_type_e(void)
     CodeHandler();
 
     if (p[8] != 0x1234) {
-        printf("test for type E failed\n");
+        DPRINTF("test for type E failed\n");
         return -1;
     }
 
@@ -341,7 +341,7 @@ static int test_type_e(void)
 
 int main(int argc, char *argv[])
 {
-    printf("Start testing...\n");
+    DPRINTF("Start testing...\n");
 
     test_type_0();
     test_type_1();
@@ -355,7 +355,7 @@ int main(int argc, char *argv[])
     test_type_d();
     test_type_e();
 
-    printf("Testing done.\n");
+    DPRINTF("Testing done.\n");
 
     return 0;
 }

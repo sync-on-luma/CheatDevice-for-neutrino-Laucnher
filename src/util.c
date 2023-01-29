@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include "util.h"
 #include "pad.h"
 #include "menus.h"
@@ -47,8 +48,9 @@ extern int _usbhdfsd_irx_size;
 
 void loadModules()
 {
+    DPRINTF_INIT();
     int ret;
-    printf("\n ** Loading main modules **\n");
+    DPRINTF("\n ** Loading main modules **\n");
 
     /* IOP reset routine taken from ps2rd */
     SifInitRpc(0);
@@ -942,7 +944,7 @@ unsigned long mycrc32(unsigned long inCrc32, const void *buf, long bufLen)
      *  by Mark R. Nelson in Dr. Dobb's Journal, May 1992, pp. 64-67.
      *
      *  v1.0.0: original release.
-     *  v1.0.1: fixed printf formats.
+     *  v1.0.1: fixed DPRINTF formats.
      *  v1.0.2: fixed something else.
      *  v1.0.3: replaced CRC constant table by generator function.
      *  v1.0.4: reformatted code, made ANSI C.  1994-12-05.

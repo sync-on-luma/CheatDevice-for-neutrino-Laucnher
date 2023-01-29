@@ -6,7 +6,7 @@
 DTL_T10000 ?= 0
 EXFAT ?= 0
 HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
-
+PRINTF = EE_SIO
 RELDIR = release
 EE_BIN = CheatDevice$(HAS_EXFAT).ELF
 # For minizip
@@ -30,6 +30,13 @@ IRX_OBJS += resources/usbd_irx.o
 IRX_OBJS += resources/iomanX_irx.o
 ifeq ($(HOMEBREW_IRX),1)
   IRX_OBJS += resources/sio2man_irx.o resources/mcman_irx.o resources/mcserv_irx.o resources/padman_irx.o
+endif
+
+ifeq ($(PRINTF),EE_SIO)
+  EE_CFLAGS += -DEE_SIO
+endif
+ifeq ($(PRINTF),COMMON)
+  EE_CFLAGS += -DCOMMON_PRINTF
 endif
 
 ifeq ($(EXFAT),1)

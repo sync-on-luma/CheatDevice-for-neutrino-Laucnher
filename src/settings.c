@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -52,7 +53,7 @@ static void getINIString(struct ini_info *ini, char **dst, const char *keyName, 
     else
         *dst = defaultValue ? strdup(defaultValue) : NULL;
 
-    printf("getINIString: %s = %s\n", keyName, *dst);
+    DPRINTF("getINIString: %s = %s\n", keyName, *dst);
 }
 
 static void migrateOldDatabaseSetting()
@@ -126,7 +127,7 @@ int initSettings()
     if(initialized)
         return 0;
 
-    printf("\n ** Initializing Settings **\n");
+    DPRINTF("\n ** Initializing Settings **\n");
 
     struct ini_info *ini = ini_load(settingsPath);
 
@@ -153,8 +154,8 @@ int initSettings()
         settingsDirty = 1;
     }
 
-    printf("settings.databaseReadOnlyPath:  %p -> %s\n", settings.databaseReadOnlyPath, settings.databaseReadOnlyPath);
-    printf("settings.databaseReadWritePath: %p -> %s\n", settings.databaseReadWritePath, settings.databaseReadWritePath);
+    DPRINTF("settings.databaseReadOnlyPath:  %p -> %s\n", settings.databaseReadOnlyPath, settings.databaseReadOnlyPath);
+    DPRINTF("settings.databaseReadWritePath: %p -> %s\n", settings.databaseReadWritePath, settings.databaseReadWritePath);
 
     if(ini)
         ini_free(ini);
@@ -168,7 +169,7 @@ int killSettings()
     if(!initialized)
         return 0;
 
-    printf(" ** Killing Settings Manager **\n");
+    DPRINTF(" ** Killing Settings Manager **\n");
 
     free(settings.databasePath);
     free(settings.bootPaths[0]);
@@ -194,7 +195,7 @@ int settingsSave(char *error, int errorLen)
         if(error)
             snprintf(error, errorLen, "Failed to open \"%s\" for writing.", settingsPath);
 
-        printf("Error saving %s\n", settingsPath);
+        DPRINTF("Error saving %s\n", settingsPath);
         return 0;
     }
 

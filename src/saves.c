@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -195,7 +196,7 @@ gameSave_t *savesGetSaves(device_t dev)
             handler = getSaveHandler(record.name);
             if(!handler)
             {
-                printf("Ignoring file \"%s\"\n", record.name);
+                DPRINTF("Ignoring file \"%s\"\n", record.name);
                 continue;
             }
 
@@ -336,7 +337,7 @@ int savesGetAvailableDevices()
     if(ret == 0 || ret == -1)
     {
         available |= MC_SLOT_1;
-        printf("mem card slot 1 available\n");
+        DPRINTF("mem card slot 1 available\n");
     }
     s_mc1Free = mcFree;
 
@@ -346,7 +347,7 @@ int savesGetAvailableDevices()
     if(ret == 0 || ret == -1)
     {
         available |= MC_SLOT_2;
-        printf("mem card slot 2 available\n");
+        DPRINTF("mem card slot 2 available\n");
     }
     s_mc2Free = mcFree;
     

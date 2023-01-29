@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <fileio.h>
 #include <libmc.h>
@@ -334,7 +335,7 @@ int createCBS(gameSave_t *save, device_t src)
     dataCompressed = malloc(compressedSize);
     if(!dataCompressed)
     {
-        printf("malloc failed\n");
+        DPRINTF("malloc failed\n");
         free(dataBuff);
         fclose(cbsFile);
         return 0;
@@ -343,7 +344,7 @@ int createCBS(gameSave_t *save, device_t src)
     ret = compress2(dataCompressed, &compressedSize, dataBuff, header.decompressedSize, Z_BEST_COMPRESSION);
     if(ret != Z_OK)
     {
-        printf("compress2 failed\n");
+        DPRINTF("compress2 failed\n");
         free(dataBuff);
         free(dataCompressed);
         fclose(cbsFile);

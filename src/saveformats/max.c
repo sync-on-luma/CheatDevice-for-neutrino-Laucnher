@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include <stdio.h>
 #include <libmc.h>
 
@@ -39,13 +40,13 @@ static void printMAXHeader(const maxHeader_t *header)
     if(!header)
         return;
 
-    printf("Magic            : %.*s\n", sizeof(header->magic), header->magic);
-    printf("CRC              : %08X\n", header->crc);
-    printf("dirName          : %.*s\n", sizeof(header->dirName), header->dirName);
-    printf("iconSysName      : %.*s\n", sizeof(header->iconSysName), header->iconSysName);
-    printf("compressedSize   : %u\n", header->compressedSize);
-    printf("numFiles         : %u\n", header->numFiles);
-    printf("decompressedSize : %u\n", header->decompressedSize);
+    DPRINTF("Magic            : %.*s\n", sizeof(header->magic), header->magic);
+    DPRINTF("CRC              : %08X\n", header->crc);
+    DPRINTF("dirName          : %.*s\n", sizeof(header->dirName), header->dirName);
+    DPRINTF("iconSysName      : %.*s\n", sizeof(header->iconSysName), header->iconSysName);
+    DPRINTF("compressedSize   : %u\n", header->compressedSize);
+    DPRINTF("numFiles         : %u\n", header->numFiles);
+    DPRINTF("decompressedSize : %u\n", header->decompressedSize);
 }
 
 static int roundUp(int i, int j)
@@ -128,7 +129,7 @@ int extractMAX(gameSave_t *save, device_t dst)
     ret = fread(compressed, 1, header.compressedSize, f);
     if(ret != header.compressedSize)
     {
-        printf("Compressed size: actual=%d, expected=%d\n", ret,
+        DPRINTF("Compressed size: actual=%d, expected=%d\n", ret,
             header.compressedSize);
         free(compressed);
         free(dirPath);
@@ -143,7 +144,7 @@ int extractMAX(gameSave_t *save, device_t dst)
     // As with other save formats, decompressedSize isn't acccurate.
     if(ret == 0)
     {
-        printf("Decompression failed.\n");
+        DPRINTF("Decompression failed.\n");
         free(decompressed);
         free(compressed);
         free(dirPath);

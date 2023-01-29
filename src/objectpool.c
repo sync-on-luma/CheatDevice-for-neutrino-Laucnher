@@ -1,3 +1,4 @@
+#include "dbgprintf.h"
 #include "objectpool.h"
 #include "cheats.h"
 #include <stdlib.h>
@@ -97,7 +98,7 @@ int objectPoolRelease(objectPoolType_t type, void *ptr)
     {
         memset(ptr, 0, pools[type].objectSize);
         
-        printf("objectPoolRelease: Adding %p to freelist\n", ptr);
+        DPRINTF("objectPoolRelease: Adding %p to freelist\n", ptr);
         freeList_t *temp = malloc(sizeof(freeList_t));
         temp->ptr = ptr;
         temp->next = pools[type].freeList;
