@@ -35,7 +35,7 @@ extern int _usbd_irx_size;
 
 #ifdef EXFAT
 extern u8  _bdm_irx_start[];
-extern int _bdm_irx__size;
+extern int _bdm_irx_size;
 extern u8  _bdmfs_fatfs_irx_start[];
 extern int _bdmfs_fatfs_irx_size;
 extern u8  _usbmass_bd_irx_start[];
