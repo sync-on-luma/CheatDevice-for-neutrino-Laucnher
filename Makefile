@@ -27,10 +27,16 @@ OBJS += src/saveformats/util.o src/saveformats/cbs.o src/saveformats/psu.o src/s
 
 # IRX Modules
 IRX_OBJS += resources/usbd_irx.o
-IRX_OBJS += resources/usbhdfsd_irx.o
 IRX_OBJS += resources/iomanX_irx.o
 ifeq ($(HOMEBREW_IRX),1)
   IRX_OBJS += resources/sio2man_irx.o resources/mcman_irx.o resources/mcserv_irx.o resources/padman_irx.o
+endif
+
+ifeq ($(EXFAT),1)
+  EE_CFLAGS += -DEXFAT
+  IRX_OBJS += resources/bdm_irx.o resources/bdmfs_fatfs_irx.o resources/usbmass_bd_irx.o
+else
+  IRX_OBJS += resources/usbhdfsd_irx.o
 endif
 
 # Graphic resources
@@ -76,7 +82,13 @@ modules:
 	@# IRX Modules
 	@bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
 	@bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o _usbd_irx
+ifeq ($(EXFAT),1)
+	@bin2o /iop/bdm.irx resources/bdm_irx.o _bdm_irx
+	@bin2o /iop/bdmfs_fatfs.irx resources/bdmfs_fatfs_irx.o _bdmfs_fatfs_irx
+	@bin2o /iop/usbmass_bd.irx resources/usbmass_bd_irx.o _usbmass_bd_irx
+else
 	@bin2o $(PS2SDK)/iop/irx/usbhdfsd.irx resources/usbhdfsd_irx.o _usbhdfsd_irx
+endif
 ifeq ($(HOMEBREW_IRX),1)
 	@bin2o $(PS2SDK)/iop/irx/freesio2.irx resources/sio2man_irx.o _sio2man_irx
 	@bin2o $(PS2SDK)/iop/irx/mcman.irx resources/mcman_irx.o _mcman_irx

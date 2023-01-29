@@ -16,24 +16,28 @@
 #include <sbv_patches.h>
 #include <libmc.h>
 #include <unistd.h>
+#define IMPORT_IRX(_n) \
+    extern u8 _n_##_start[]; \
+    extern unt _n_##_size
 
-#ifdef _DTL_T10000
-extern u8  _sio2man_irx_start[];
-extern int _sio2man_irx_size;
-extern u8  _mcman_irx_start[];
-extern int _mcman_irx_size;
-extern u8  _mcserv_irx_start[];
-extern int _mcserv_irx_size;
-extern u8  _padman_irx_start[];
-extern int _padman_irx_size;
+#ifdef HOMEBREW_IRX
+IMPORT_IRX(_sio2man_irx);
+IMPORT_IRX(_mcman_irx);
+IMPORT_IRX(_mcserv_irx);
+IMPORT_IRX(_padman_irx);
 #endif
 
-extern u8  _iomanX_irx_start[];
-extern int _iomanX_irx_size;
-extern u8  _usbd_irx_start[];
-extern int _usbd_irx_size;
-extern u8  _usbhdfsd_irx_start[];
-extern int _usbhdfsd_irx_size;
+IMPORT_IRX(_iomanX_irx);
+IMPORT_IRX(_usbd_irx);
+
+#ifdef EXFAT
+IMPORT_IRX(_bdm_irx);
+IMPORT_IRX(_bdmfs_fatfs_irx);
+IMPORT_IRX(_usbd_irx);
+IMPORT_IRX(_usbmass_bd_irx);
+#else
+IMPORT_IRX(_usbhdfsd_irx);
+#endif
 
 void loadModules()
 {
@@ -84,9 +88,17 @@ void loadModules()
     SifLoadModule("rom0:MCSERV", 0, NULL);
     #endif
     SifExecModuleBuffer(_iomanX_irx_start, _iomanX_irx_size, 0, NULL, &ret);
+#ifdef EXFAT
+    SifExecModuleBuffer(_bdm_irx_start,         _bdm_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(_bdmfs_fatfs_irx_start, _bdmfs_fatfs_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(_usbd_irx_start,        _usbd_irx_size, 0, NULL, &ret);
+    SifExecModuleBuffer(_usbmass_bd_irx_start,  _usbmass_bd_irx_size, 0, NULL, &ret);
+    sleep(3); // Allow USB devices some time to be detected
+#else
     SifExecModuleBuffer(_usbd_irx_start, _usbd_irx_size, 0, NULL, &ret);
     SifExecModuleBuffer(_usbhdfsd_irx_start, _usbhdfsd_irx_size, 0, NULL, &ret);
     sleep(2); // Allow USB devices some time to be detected
+#endif
 
     #ifdef HOMEBREW_IRX
     mcInit(MC_TYPE_XMC);

@@ -1,14 +1,25 @@
-# This is the EditorConfig (http://editorconfig.org/) coding style file for Cheat Device
+# EditorConfig: http://EditorConfig.org
 
+# Top-most EditorConfig file
 root = true
 
+# Unix-style newlines with a newline ending every file
 [*]
-charset = utf-8
 end_of_line = lf
 insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# 4 space indentation
+[*.{c,h,js,css,html}]
 indent_style = space
 indent_size = 4
-trim_trailing_whitespace = true
 
-[Makefile]
+# 2 space indentation
+[*.{json,xml,yaml,yml}]
+indent_style = space
+indent_size = 2
+
+# Tab indentation
+[Makefile*]
 indent_style = tab
