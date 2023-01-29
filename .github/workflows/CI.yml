@@ -26,7 +26,7 @@ jobs:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         git fetch --prune --unshallow
         
-    - name: Compile wLaunchELF without network
+    - name: Compile cheat device without network
       run: |
         make rebuild ${{ matrix.exfat }}
 
@@ -34,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ github.event.repository.name }}
-        path: BOOT*.ELF
+        path: release/*.ELF
     
 ####################################################### 
   release:

@@ -8,7 +8,7 @@ EXFAT ?= 0
 HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
 
 RELDIR = release
-EE_BIN = cheatdevice.elf
+EE_BIN = CheatDevice.ELF
 # For minizip
 EE_CFLAGS += -DUSE_FILE32API
 
