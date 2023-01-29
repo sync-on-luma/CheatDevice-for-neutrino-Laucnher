@@ -83,9 +83,9 @@ modules:
 	@bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
 	@bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o _usbd_irx
 ifeq ($(EXFAT),1)
-	@bin2o /iop/bdm.irx resources/bdm_irx.o _bdm_irx
-	@bin2o /iop/bdmfs_fatfs.irx resources/bdmfs_fatfs_irx.o _bdmfs_fatfs_irx
-	@bin2o /iop/usbmass_bd.irx resources/usbmass_bd_irx.o _usbmass_bd_irx
+	@bin2o iop/bdm.irx resources/bdm_irx.o _bdm_irx
+	@bin2o iop/bdmfs_fatfs.irx resources/bdmfs_fatfs_irx.o _bdmfs_fatfs_irx
+	@bin2o iop/usbmass_bd.irx resources/usbmass_bd_irx.o _usbmass_bd_irx
 else
 	@bin2o $(PS2SDK)/iop/irx/usbhdfsd.irx resources/usbhdfsd_irx.o _usbhdfsd_irx
 endif
