@@ -135,10 +135,6 @@ version:
 
 
 main: $(EE_BIN)
-	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o
-	rm -f resources/*.o
-	rm -f bootstrap/*.elf bootstrap/*.o
-	rm -f engine/*.erl engine/*.o
 
 $(RELDIR): all
 	rm -rf $(RELDIR)

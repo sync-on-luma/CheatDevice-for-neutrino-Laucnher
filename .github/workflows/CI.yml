@@ -28,7 +28,7 @@ jobs:
         
     - name: Compile cheat device without network
       run: |
-        make rebuild ${{ matrix.exfat }}
+        make rebuild release ${{ matrix.exfat }}
 
     - name: list
       run: |
