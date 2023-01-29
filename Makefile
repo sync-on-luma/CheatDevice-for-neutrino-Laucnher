@@ -8,6 +8,7 @@ EXFAT ?= 0
 HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
 
 RELDIR = release
+RES_DIR = resources/
 EE_BIN = CheatDevice.ELF
 # For minizip
 EE_CFLAGS += -DUSE_FILE32API
@@ -34,14 +35,16 @@ ifeq ($(HOMEBREW_IRX),1)
 endif
 
 # Graphic resources
-OBJS += resources/background_png.o \
-    resources/check_png.o resources/hamburgerIcon_png.o resources/gamepad_png.o resources/cube_png.o \
-    resources/savemanager_png.o resources/flashdrive_png.o resources/memorycard1_png.o resources/memorycard2_png.o \
-    resources/buttonCross_png.o resources/buttonCircle_png.o resources/buttonTriangle_png.o \
-    resources/buttonSquare_png.o resources/buttonStart_png.o resources/buttonSelect_png.o \
-    resources/buttonL1_png.o resources/buttonL2_png.o resources/buttonL3_png.o \
-    resources/buttonR1_png.o resources/buttonR2_png.o resources/buttonR3_png.o
+GFX += background.png \
+    check.png hamburgerIcon.png gamepad.png cube.png \
+    savemanager.png flashdrive.png memorycard1.png memorycard2.png \
+    buttonCross.png buttonCircle.png buttonTriangle.png \
+    buttonSquare.png buttonStart.png buttonSelect.png \
+    buttonL1.png buttonL2.png buttonL3.png \
+    buttonR1.png buttonR2.png buttonR3.png
 
+OBJS := $(GFX:%=$(RES_DIR)%) # remap all EE_OBJ to obj subdir
+OBJS = $(addprefix $(RES_DIR)/, $(addsuffix _png.o, $(basename $(GFX))))
 # Engine
 OBJS += engine/engine_erl.o
 
@@ -129,7 +132,7 @@ main: $(EE_BIN)
 	rm -f engine/*.erl engine/*.o
 
 $(RELDIR): all
-	rm -rf $(RELDIR)
+	rm -rf $(RELDIR)/
 	mkdir $(RELDIR)
 	ps2-packer cheatdevice.elf $(RELDIR)/cheatdevice.elf
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
@@ -144,6 +147,11 @@ clean:
 	cd bootstrap && make clean
 
 rebuild: clean all
+
+$(RES_DIR)/%.o: $(RES_DIR)/%.png
+	$(BIN2C) $< $*_png.c $*_png
+	$(EE_CC) -c $*_png.c -o $(RES_DIR)$*_png.o
+	rm $*_png.c
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
