@@ -79,20 +79,20 @@ EE_OBJS = $(IRX_OBJS) $(OBJS)
 all: modules version main
 
 modules:
-	bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o iomanX_irx
-	bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o usbd_irx
+	bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
+	bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o _usbd_irx
 ifeq ($(EXFAT),1)
-	bin2o iop/bdm.irx resources/bdm_irx.o bdm_irx
-	bin2o iop/bdmfs_fatfs.irx resources/bdmfs_fatfs_irx.o bdmfs_fatfs_irx
-	bin2o iop/usbmass_bd.irx resources/usbmass_bd_irx.o usbmass_bd_irx
+	bin2o iop/bdm.irx resources/bdm_irx.o _bdm_irx
+	bin2o iop/bdmfs_fatfs.irx resources/bdmfs_fatfs_irx.o _bdmfs_fatfs_irx
+	bin2o iop/usbmass_bd.irx resources/usbmass_bd_irx.o _usbmass_bd_irx
 else
-	bin2o $(PS2SDK)/iop/irx/usbhdfsd.irx resources/usbhdfsd_irx.o usbhdfsd_irx
+	bin2o $(PS2SDK)/iop/irx/usbhdfsd.irx resources/usbhdfsd_irx.o _usbhdfsd_irx
 endif
 ifeq ($(HOMEBREW_IRX),1)
-	bin2o $(PS2SDK)/iop/irx/freesio2.irx resources/sio2man_irx.o sio2man_irx
-	bin2o $(PS2SDK)/iop/irx/mcman.irx resources/mcman_irx.o mcman_irx
-	bin2o $(PS2SDK)/iop/irx/mcserv.irx resources/mcserv_irx.o mcserv_irx
-	bin2o $(PS2SDK)/iop/irx/freepad.irx resources/padman_irx.o padman_irx
+	bin2o $(PS2SDK)/iop/irx/freesio2.irx resources/sio2man_irx.o _sio2man_irx
+	bin2o $(PS2SDK)/iop/irx/mcman.irx resources/mcman_irx.o _mcman_irx
+	bin2o $(PS2SDK)/iop/irx/mcserv.irx resources/mcserv_irx.o _mcserv_irx
+	bin2o $(PS2SDK)/iop/irx/freepad.irx resources/padman_irx.o _padman_irx
 endif
 
 	@# Graphics
