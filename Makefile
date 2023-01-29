@@ -139,14 +139,14 @@ main: $(EE_BIN)
 $(RELDIR): all
 	rm -rf $(RELDIR)
 	mkdir $(RELDIR)
-	ps2-packer cheatdevice.elf $(RELDIR)/cheatdevice.elf
+	ps2-packer $(EE_BIN) $(RELDIR)/$(EE_BIN)
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
 	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)
 	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' $(RELDIR)/CheatDevicePS2.ini
 	cd $(RELDIR) && zip -q -9 CheatDevicePS2-$$(git describe).zip *
 
 clean:
-	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o *.elf
+	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o $(EE_BIN) $(RELDIR)/$(EE_BIN)
 	rm -f resources/*.o
 	cd engine && make clean
 	cd bootstrap && make clean
