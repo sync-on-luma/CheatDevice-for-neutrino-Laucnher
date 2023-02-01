@@ -144,6 +144,9 @@ version:
 main: $(EE_BIN)
 
 $(RELDIR): all
+	rm -rf $(RELDIR)
+	mkdir $(RELDIR)
+	cp extra_cheats/*.zip $(RELDIR)/extra_cheats/
 	ps2-packer $(EE_BIN) $(RELDIR)/$(EE_BIN)
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
 	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)

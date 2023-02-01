@@ -26,6 +26,12 @@ jobs:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         git fetch --prune --unshallow --tags
         
+    - name: pack cheats
+      run: |
+        cd extra_cheats
+        chmod +x pack.sh
+        ./pack.sh
+        
     - name: Compile cheat device
       run: |
         make rebuild release ${{ matrix.exfat }}
