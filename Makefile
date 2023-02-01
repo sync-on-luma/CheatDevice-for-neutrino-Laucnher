@@ -146,12 +146,13 @@ main: $(EE_BIN)
 $(RELDIR): all
 	rm -rf $(RELDIR)
 	mkdir $(RELDIR)
+	mkdir $(RELDIR)/extra_cheats/
 	cp extra_cheats/*.zip $(RELDIR)/extra_cheats/
 	ps2-packer $(EE_BIN) $(RELDIR)/$(EE_BIN)
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
 	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)
 	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' $(RELDIR)/CheatDevicePS2.ini
-	cd $(RELDIR) && zip -q -9 CheatDevicePS2$(HAS_EXFAT).zip *
+	cd $(RELDIR) && zip -q -9 CheatDevicePS2$(HAS_EXFAT).zip * extra_cheats/*.zip
 
 clean:
 	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o $(EE_BIN) $(RELDIR)/$(EE_BIN)
