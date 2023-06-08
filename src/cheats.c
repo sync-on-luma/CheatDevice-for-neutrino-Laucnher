@@ -32,7 +32,7 @@ static int cheatDatabaseDirty = 0;
 extern unsigned char _engine_erl_start[];
 
 typedef struct cheatDatabaseHandler {
-    char name[28]; // cheat database format name
+    char name[32]; // cheat database format name
     char extension[4]; // file extension
     
     int (*open)(const char *path, cheatsGame_t **gamesAdded, unsigned int *numGamesAdded);
@@ -41,6 +41,7 @@ typedef struct cheatDatabaseHandler {
 
 static cheatDatabaseHandler_t cheatDatabaseHandlers[] = {
     {"Text File (.txt)", "txt", textCheatsOpen, textCheatsSave},
+    {"OPL Cheat (.cht)", "cht", textCheatsOpen, textCheatsSave},
     {"Text File in ZIP (.zip)", "zip", textCheatsOpenZip, NULL}
 };
 
