@@ -1,7 +1,12 @@
 Cheat Device for PS2
 ====================
 
-[![Build Status](https://travis-ci.com/root670/CheatDevicePS2.svg?branch=master)](https://travis-ci.com/root670/CheatDevicePS2)
+The official CheatDevice repository has been marked as archive (the project is abandoned) since Mar 18, 2023.
+
+this fork is a maintained mirror by El_isra (aka: Matías Israelson)
+with exfat support and some tweaks.
+
+
 [![Downloads](https://img.shields.io/github/downloads/israpps/CheatDevicePS2/total.svg)](https://github.com/root670/CheatDevicePS2/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](https://github.com/root670/CheatDevicePS2/blob/master/LICENSE)
 
@@ -9,7 +14,7 @@ Cheat Device is a game enhancer for PlayStation 2 games similar to Action
 Replay, GameShark, and CodeBreaker. It supports booting retail, disc based 
 games as well as ELF files such as OpenPS2Loader or ESR.
 
-See the [wiki](https://github.com/root670/CheatDevicePS2/wiki) to get started
+See the [wiki](https://github.com/israpps/CheatDevicePS2/wiki) to get started
 using Cheat Device.
 
 ## Features
@@ -38,7 +43,7 @@ docker-make.bat [args...]
 .\docker-make.bat [args...]
 ```
 
-See the [compile](https://github.com/root670/CheatDevicePS2/wiki/Compiling) 
+See the [compile](https://github.com/israpps/CheatDevicePS2/wiki/Compiling) 
 page in the wiki for instructions to build without Docker.
 
 ## License
