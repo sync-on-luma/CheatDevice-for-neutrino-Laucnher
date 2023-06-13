@@ -33,9 +33,20 @@ static const char *MEMORY_CARD_1_NAME   = "Memory Card (Slot 1)";
 static const char *MEMORY_CARD_2_NAME   = "Memory Card (Slot 2)";
 static const char *FLASH_DRIVE_NAME     = "Flash Drive";
 
-static const char *SYSTEM_SAVE_NAME_US = "BADATA-SYSTEM";
-static const char *SYSTEM_SAVE_NAME_EU = "BEDATA-SYSTEM";
-static const char *SYSTEM_SAVE_NAME_JP = "BIDATA-SYSTEM";
+static const char *SYSTEM_SAVE_NAME_EU = "BEDATA-SYSTEM"; // "Your System Configuration" for Europe, Oceania and russia PS2
+static const char *SYSTEM_SAVE_NAME_JP = "BIDATA-SYSTEM"; // "Your System Configuration" for Japanese PS2
+static const char *SYSTEM_SAVE_NAME_CH = "BCDATA-SYSTEM"; // "Your System Configuration" for Chinese PS2
+static const char *SYSTEM_SAVE_NAME_US = "BADATA-SYSTEM"; // "Your System Configuration" for the USA and remaining regions
+
+static const char *SYSTEM_UPDATE_NAME_EU = "BEEXEC-SYSTEM"; // System Updates for Europe, Oceania and russia PS2
+static const char *SYSTEM_UPDATE_NAME_JP = "BIEXEC-SYSTEM"; // System Updates for Japanese PS2
+static const char *SYSTEM_UPDATE_NAME_CH = "BCEXEC-SYSTEM"; // System Updates for Chinese PS2
+static const char *SYSTEM_UPDATE_NAME_US = "BAEXEC-SYSTEM"; // System Updates for the USA and remaining regions
+
+static const char *DVDPLAYER_UPDATE_NAME_EU = "BEEXEC-DVDPLAYER"; // DVDPlayer Updates for Europe, Oceania and russia PS2
+static const char *DVDPLAYER_UPDATE_NAME_JP = "BIEXEC-DVDPLAYER"; // DVDPlayer Updates for Japanese PS2
+static const char *DVDPLAYER_UPDATE_NAME_CH = "BCEXEC-DVDPLAYER"; // DVDPlayer Updates for Chinese PS2
+static const char *DVDPLAYER_UPDATE_NAME_US = "BAEXEC-DVDPLAYER"; // DVDPlayer Updates for the USA and remaining regions
 
 static saveHandler_t s_PSUHandler = {
     "EMS Adapter (.psu)", "psu", NULL, createPSU, extractPSU
@@ -221,7 +232,6 @@ gameSave_t *savesGetSaves(device_t dev)
         
         fioDclose(fs);
     }
-    
     else
     {
         mcGetDir((dev == MC_SLOT_1) ? 0 : 1, 0, "/*", 0, 54, mcDir);
@@ -235,9 +245,23 @@ gameSave_t *savesGetSaves(device_t dev)
 
             if (strcmp(mcDir[i].EntryName, SYSTEM_SAVE_NAME_US) == 0 ||
                 strcmp(mcDir[i].EntryName, SYSTEM_SAVE_NAME_EU) == 0 ||
-                strcmp(mcDir[i].EntryName, SYSTEM_SAVE_NAME_JP) == 0
+                strcmp(mcDir[i].EntryName, SYSTEM_SAVE_NAME_CH) == 0 ||
+                strcmp(mcDir[i].EntryName, SYSTEM_SAVE_NAME_JP) == 0 ||
+
+                strcmp(mcDir[i].EntryName, SYSTEM_UPDATE_NAME_EU) == 0 ||
+                strcmp(mcDir[i].EntryName, SYSTEM_UPDATE_NAME_JP) == 0 ||
+                strcmp(mcDir[i].EntryName, SYSTEM_UPDATE_NAME_CH) == 0 ||
+                strcmp(mcDir[i].EntryName, SYSTEM_UPDATE_NAME_US) == 0 ||
+
+                strcmp(mcDir[i].EntryName, DVDPLAYER_UPDATE_NAME_EU) == 0 ||
+                strcmp(mcDir[i].EntryName, DVDPLAYER_UPDATE_NAME_JP) == 0 ||
+                strcmp(mcDir[i].EntryName, DVDPLAYER_UPDATE_NAME_CH) == 0 ||
+                strcmp(mcDir[i].EntryName, DVDPLAYER_UPDATE_NAME_US) == 0
             )
-                continue; // Ignore "Your System Configuration" save
+            {
+                DPRINTF("%s: ignoring '%s'\n", __func__, mcDir[i].EntryName);
+                continue; // Ignore "Your System Configuration", DVDPlayer update and System update Folders....
+            }
 
             char *path = savesGetDevicePath(mcDir[i].EntryName, dev);
             snprintf(iconSysPath, 64, "%s/icon.sys", path);
