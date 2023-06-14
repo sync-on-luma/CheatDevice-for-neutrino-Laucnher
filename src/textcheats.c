@@ -364,25 +364,32 @@ int textCheatsOpenZip(const char *path, cheatsGame_t **gamesAdded, unsigned int 
 {
     if(!path || !gamesAdded || !numGamesAdded)
         return 0;
+    DPRINTF("%s: %s\n", __func__, path);
 
     unzFile zipFile = unzOpen(path);
     if(!zipFile)
+    {
+        DPRINTF("Cant open...\n");
         return 1; // File doesn't exist.
+    }
 
     unz_global_info zipGlobalInfo;
-    if(unzGetGlobalInfo(zipFile, &zipGlobalInfo) != UNZ_OK)
+    int x;
+    if((x = unzGetGlobalInfo(zipFile, &zipGlobalInfo)) != UNZ_OK)
     {
+        DPRINTF("unzGetGlobalInfo: error %d\n", x);
         unzClose(zipFile);
         return 0;
     }
 
     unz_file_info64 zipFileInfo;
     char filename[100];
-    if(unzGoToFirstFile2(zipFile, &zipFileInfo, 
+    if((x = unzGoToFirstFile2(zipFile, &zipFileInfo, 
                       filename, sizeof(filename), 
                       NULL, 0, 
-                      NULL, 0) != UNZ_OK)
+                      NULL, 0)) != UNZ_OK)
     {
+        DPRINTF("unzGoToFirstFile2: error %d\n", x);
         unzClose(zipFile);
         return 0;
     }
@@ -394,8 +401,11 @@ int textCheatsOpenZip(const char *path, cheatsGame_t **gamesAdded, unsigned int 
     while(hasNextFile == UNZ_OK)
     {
         const char *extension = getFileExtension(filename);
-        if((!extension) || (strcasecmp(extension, "txt") != 0) || (strcasecmp(extension, "cht") != 0))
+        DPRINTF("\tReading %s (%s)...\n", filename, extension);
+        if((!extension) || 
+            ((strcasecmp(extension, "txt") != 0) && (strcasecmp(extension, "cht") != 0)))
         {
+            DPRINTF("\t\tNot a text file.\n");
             // Not a .txt file
             hasNextFile = unzGoToNextFile2(zipFile, &zipFileInfo,
                                         filename, sizeof(filename),
@@ -407,17 +417,22 @@ int textCheatsOpenZip(const char *path, cheatsGame_t **gamesAdded, unsigned int 
         // Current file is a .txt file, so we'll try to read it
         if(unzOpenCurrentFile(zipFile) != UNZ_OK)
         {
+            DPRINTF("\t\tCannot open.\n");
             unzClose(zipFile);
             return 0;
         }
 
         if(zipFileInfo.uncompressed_size == 0)
+        {
+            DPRINTF("\t\tEmpty file.\n");
             continue; // Empty file.
+        }
 
         // +1 to NULL-terminate later
         char *text = malloc(zipFileInfo.uncompressed_size + 1);
-        if(!text)
+        if(text == NULL)
         {
+            DPRINTF("\t\tfailed to malloc %d bytes.\n", zipFileInfo.uncompressed_size + 1);
             unzCloseCurrentFile(zipFile);
             unzClose(zipFile);
             return 0;
@@ -425,6 +440,7 @@ int textCheatsOpenZip(const char *path, cheatsGame_t **gamesAdded, unsigned int 
 
         if(unzReadCurrentFile(zipFile, text, zipFileInfo.uncompressed_size) < 0)
         {
+            DPRINTF("\t\tError reading file.\n");
             // Zip file is corrupt!
             free(text);
             unzCloseCurrentFile(zipFile);
