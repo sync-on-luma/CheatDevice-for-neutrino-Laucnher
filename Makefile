@@ -85,6 +85,7 @@ EE_INCS += -I$(GSKIT)/include -I$(PS2SDK)/ports/include -Iinclude
 EE_OBJS = $(IRX_OBJS) $(OBJS)
 
 all: modules version main
+	$(info Build finished)
 
 modules:
 	bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
