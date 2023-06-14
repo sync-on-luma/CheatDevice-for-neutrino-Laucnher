@@ -1,7 +1,7 @@
 Cheat Device for PS2
 ====================
 
-The [official CheatDevice repository](https://github.com/israpps/CheatDevicePS2/) has been marked as archive (the project is abandoned) since Mar 18, 2023.
+The [official CheatDevice repository](https://github.com/root670/CheatDevicePS2/) has been marked as archive (the project is abandoned) since Mar 18, 2023.
 
 this fork is a maintained mirror by El_isra (aka: Matías Israelson)
 with exfat support and some tweaks.
