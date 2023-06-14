@@ -9,10 +9,14 @@
 #include "menus.h"
 #include "cheats.h"
 #include "settings.h"
+#include "dbgprintf.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
 {
+    DPRINTF_INIT();
+    printf("Cheat Device. By wesley castro. Maintained by El_isra\n Compilation " __DATE__ " " __TIME__ "\n");
+    DPRINTF("Cheat Device. By wesley castro. Maintained by El_isra\n Compilation " __DATE__ " " __TIME__ "\n");
     initGraphics();
     loadModules();
     initSettings();

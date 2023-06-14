@@ -48,7 +48,6 @@ extern int _usbhdfsd_irx_size;
 
 void loadModules()
 {
-    DPRINTF_INIT();
     int ret;
     DPRINTF("\n ** Loading main modules **\n");
 
