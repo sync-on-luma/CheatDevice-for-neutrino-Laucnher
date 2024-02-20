@@ -41,8 +41,6 @@ else
 endif
 
 ifeq ($(HDD), 1)
-  PRINTF = EE_SIO
-  EE_CLFAGS += -O0 -g
   EE_LIBS += -lpoweroff
   IRX_OBJS += resources/ps2fs_irx.o resources/ps2hdd_irx.o resources/ps2atad_irx.o resources/poweroff_irx.o
   EE_CFLAGS += -DHDD
