@@ -32,7 +32,11 @@ static char *settingsPath = "CheatDevicePS2.ini";
 static char *defaultBootPaths[] = {
     "mass:BOOT/BOOT.ELF",
     "mass:BOOT/ESR.ELF",
+#ifdef SUPPORT_SYSTEM_2X6
+    "mc0:boot.bin", // security dongle bootfile
+#else
     "mc0:BOOT/BOOT.ELF",
+#endif
     "mc1:BOOT/BOOT.ELF",
     "rom:OSDSYS"
 };
