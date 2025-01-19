@@ -33,6 +33,10 @@ EXTERN_BIN2O(_padman_irx);
 EXTERN_BIN2O(_usbd_irx);
 EXTERN_BIN2O(_iomanX_irx);
 
+#ifdef MMCE
+EXTERN_BIN2O(_mmceman_irx);
+#endif
+
 #ifdef EXFAT
 EXTERN_BIN2O(_bdm_irx);
 EXTERN_BIN2O(_bdmfs_fatfs_irx);
@@ -103,7 +107,7 @@ void poweroffCallback(void *arg)
 
 int loadModules(int booting_from_hdd)
 {
-    int ID, RET, HDDSTAT, filexio_loaded=0, dev9_loaded=0;
+    int ID, RET, HDDSTAT, filexio_loaded=0, dev9_loaded=0, mmceman_loaded=0;
     DPRINTF("\n ** Loading main modules **\n");
 
     /* IOP reset routine taken from ps2rd */
@@ -139,11 +143,9 @@ int loadModules(int booting_from_hdd)
     sbv_patch_disable_prefix_check();
     LOAD_IRX_BUF_SILENT(_iomanX_irx);
 #ifdef FILEXIO
-    if (booting_from_hdd) {
         ID = LOAD_IRX_BUF_NARG(_filexio_irx, &RET);
         filexio_loaded = IRX_LOAD_SUCCESS();
-        if (filexio_loaded) fileXioInit(); else sprintf(error, "HDD Init error\n%s: ID:%d, RET_%d!", "FILEXIO.IRX", ID, RET);
-    }
+        if (filexio_loaded) fileXioInit(); else sprintf(error, "Error loading driver\n%s: ID:%d, RET:%d!", "FILEXIO.IRX", ID, RET);
 #endif
 #ifdef DEV9
     if (booting_from_hdd) {
@@ -163,6 +165,14 @@ int loadModules(int booting_from_hdd)
     SifLoadModule("rom0:MCMAN", 0, NULL);
     SifLoadModule("rom0:MCSERV", 0, NULL);
 #endif
+
+
+#ifdef MMCE
+    ID = LOAD_IRX_BUF_NARG(_mmceman_irx, &RET); //needs fileXio and sio2man to run
+    mmceman_loaded = IRX_LOAD_SUCCESS();
+    if (!mmceman_loaded) sprintf(error, "Error loading driver\n%s: ID:%d, RET:%d!", "MMCEMAN.IRX", ID, RET);
+#endif
+
 #ifdef EXFAT
     LOAD_IRX_BUF_SILENT(_bdm_irx);
     LOAD_IRX_BUF_SILENT(_bdmfs_fatfs_irx);

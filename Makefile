@@ -8,7 +8,7 @@ EXFAT ?= 0
 HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
 PRINTF = NONE
 RELDIR = release
-EE_BIN = CheatDevice$(HAS_EXFAT)$(HAS_HDD).ELF
+EE_BIN = CheatDevice$(HAS_EXFAT)$(HAS_HDD)$(HAS_MMCE).ELF
 # For minizip
 EE_CFLAGS += -DUSE_FILE32API
 
@@ -28,6 +28,16 @@ OBJS += src/saveformats/util.o src/saveformats/cbs.o src/saveformats/psu.o src/s
 # IRX Modules
 IRX_OBJS += resources/usbd_irx.o
 IRX_OBJS += resources/iomanX_irx.o
+
+
+ifeq ($(MMCE),1)
+  EE_CFLAGS += -DMMCE
+  HAS_MMCE = -MMCE
+  IRX_OBJS += resources/mmceman_irx.o
+  HOMEBREW_IRX=1
+  FILEXIO_NEED=1
+endif
+
 ifeq ($(HOMEBREW_IRX),1)
   IRX_OBJS += resources/sio2man_irx.o resources/mcman_irx.o resources/mcserv_irx.o resources/padman_irx.o
 endif
@@ -102,6 +112,9 @@ all: modules version main
 	$(info Build finished)
 
 modules:
+ifeq ($(MMCE),1)
+	bin2o iop/mmceman.irx resources/mmceman_irx.o _mmceman_irx
+endif
 	bin2o $(PS2SDK)/iop/irx/iomanX.irx resources/iomanX_irx.o _iomanX_irx
 	bin2o $(PS2SDK)/iop/irx/usbd.irx resources/usbd_irx.o _usbd_irx
 ifeq ($(EXFAT),1)
@@ -178,7 +191,7 @@ $(RELDIR): all
 	zip -q -9 $(RELDIR)/CheatDatabase.zip CheatDatabase.txt
 	cp CheatDevicePS2.ini LICENSE README.md $(RELDIR)
 	sed -i 's/CheatDatabase.txt/CheatDatabase.zip/g' $(RELDIR)/CheatDevicePS2.ini
-	cd $(RELDIR) && zip -q -9 CheatDevicePS2$(HAS_EXFAT)$(HAS_HDD).zip * extra_cheats/*.zip
+	cd $(RELDIR) && zip -q -9 CheatDevicePS2$(HAS_EXFAT)$(HAS_HDD)$(HAS_MMCE).zip * extra_cheats/*.zip
 
 clean:
 	rm -rf src/*.o src/libraries/*.o src/libraries/minizip/*.o src/saveformats/*.o $(EE_BIN) $(RELDIR)/$(EE_BIN)
