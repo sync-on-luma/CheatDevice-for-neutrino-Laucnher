@@ -38,6 +38,7 @@ typedef enum {
 typedef struct menuItem {
     menuItemType_t type;
     char *text;
+    char *path; // Optional: Set a boot path independnt of text.
     void *extra; // Optional: Associate additional data with the menuItem.
 } menuItem_t;
 

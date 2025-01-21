@@ -89,62 +89,8 @@ static void* loadBootstrap()
 void startgameExecute(const char *path)
 {
     static char boot2[100];
-    
-    if(strcmp(path, "==Disc==") == 0)
-    {
-        if(!discPrompt())
-            return;
 
-        graphicsDrawTextCentered(310, COLOR_YELLOW, "Starting game...");
-        graphicsRender();
-
-        // Wait for disc to be ready
-        while(sceCdGetDiskType() == 1) {}
-        sceCdDiskReady(0);
-        
-        int syscnfFile = open("cdrom0:\\SYSTEM.CNF;1", O_TEXT | O_RDONLY);
-        if(!syscnfFile)
-        {
-            GS_BGCOLOUR = 0x1010B4; // red
-            SleepThread();
-        }
-        
-        char syscnfText[256];
-        int syscnfLen = read(syscnfFile, syscnfText, 255);
-        close(syscnfFile);
-        if(!syscnfLen)
-        {
-            GS_BGCOLOUR = 0x1010B4;
-            SleepThread();
-        }
-        
-        syscnfText[syscnfLen] = '\0';
-
-        int found = 0;
-        char *line = strtok(syscnfText, "\n");
-        while(line)
-        {
-            if(!found)
-            {
-                char *substr = strstr(line, "BOOT2");
-                if(substr)
-                {
-                    substr += strlen("BOOT2");
-                    while(*substr == ' ' || (*substr == '='))
-                        substr++;
-                    
-                    strncpy(boot2, substr, 0x30);
-                    found = 1;
-                }
-            }
-            
-            line = strtok(NULL, "\n");
-        }
-    }
-    else
-    {
-        strncpy(boot2, path, 100);
-    }
+    strncpy(boot2, path, 100);
 
     cheatsSaveDatabase();
     settingsSave(NULL, 0);

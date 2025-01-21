@@ -20,7 +20,7 @@ typedef struct settings
 
 static int initialized = 0;
 static settings_t settings;
-static char *diskBootStr = "==Disc==";
+static char *diskBootStr = "==TEST==";
 static int settingsDirty = 0;
 
 #ifdef _DTL_T10000
@@ -42,8 +42,7 @@ static char *defaultBootPaths[] = {
 };
 
 static const char *HELP_TICKER = \
-    "{CROSS} Boot     "
-    "{SQUARE} Options     "
+    "{CROSS} Select    "
     "{CIRCLE} Main Menu";
 
 static void getINIString(struct ini_info *ini, char **dst, const char *keyName, const char *defaultValue)
@@ -267,22 +266,22 @@ char** settingsGetBootPaths(int *numPaths)
     if(!initialized)
         return NULL;
 
-    *numPaths = 5;
+    *numPaths = 3;
     return settings.bootPaths;
 }
 
-static void onDisplayContextMenu(const menuItem_t *selected)
+/*static void onDisplayContextMenu(const menuItem_t *selected)
 {
     const char *items[] = {"Edit Path", "Cancel"};
     int ret = displayPromptMenu(items, 2, "Boot Options");
 
     if(ret == 0)
         settingsRenameBootPath();
-}
+}*/
 
 static void onBootPathSelected(const menuItem_t *selected)
 {
-    const char *path = selected->text;
+    const char *path = selected->path;
     startgameExecute(path);
 }
 
@@ -293,30 +292,32 @@ void settingsLoadBootMenu()
 
     int numPaths;
     char **paths = settingsGetBootPaths(&numPaths);
-    
+
     menuItem_t *items = calloc(numPaths + 1, sizeof(menuItem_t));
     
-    /* Disc boot; default option */
+    /* Disc boot; default option
     items[0].type = MENU_ITEM_NORMAL;
     items[0].text = diskBootStr;
-    menuInsertItem(&items[0]);
-    
+    menuInsertItem(&items[0]);*/
+
+    const char *text[] = {"Start Game", "Retrun To Dashboard", "Reboot Console"};
     int i;
-    for(i = 1; i < numPaths + 1; i++)
+    for(i = 0; i < numPaths; i++)
     {
         items[i].type = MENU_ITEM_NORMAL;
-        items[i].text = paths[i-1];
-        items[i].extra = (void *)&paths[i-1];
+        items[i].text = text[i];
+        items[i].path = paths[i];
+        items[i].extra = (void *)&paths[i];
         menuInsertItem(&items[i]);
     }
 
     menuSetCallback(MENU_CALLBACK_AFTER_DRAW, cheatsDrawStats);
-    menuSetCallback(MENU_CALLBACK_PRESSED_SQUARE, onDisplayContextMenu);
+   // menuSetCallback(MENU_CALLBACK_PRESSED_SQUARE, onDisplayContextMenu);
     menuSetCallback(MENU_CALLBACK_PRESSED_CROSS, onBootPathSelected);
     menuSetHelpTickerText(HELP_TICKER);
 }
 
-void settingsRenameBootPath()
+/*void settingsRenameBootPath()
 {
     if(!initialized)
         return;
@@ -338,4 +339,4 @@ void settingsRenameBootPath()
     menuRemoveAllItems();
     settingsLoadBootMenu();
     settingsDirty = 1;
-}
+}*/

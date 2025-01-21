@@ -310,7 +310,7 @@ int menuSetActive(menuID_t id)
 
     if(id == MENU_BOOT)
     {
-        activeMenu->text = menuTitleBootMenu;
+        //activeMenu->text = menuTitleBootMenu;
         menuRemoveAllItems();
         settingsLoadBootMenu();
     }
