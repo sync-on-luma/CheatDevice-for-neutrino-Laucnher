@@ -43,9 +43,9 @@ int initMenus()
 
         activeMenu = &menues[MENU_GAMES];
         initialized = 1;
+
         return 1;
     }
-
     return 0;
 }
 
@@ -106,7 +106,6 @@ int menuInsertItem(menuItem_t *item)
 
         return 1;
     }
-
     return 0;
 }
 

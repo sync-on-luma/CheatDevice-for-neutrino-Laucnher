@@ -20,7 +20,6 @@ typedef struct settings
 
 static int initialized = 0;
 static settings_t settings;
-static char *diskBootStr = "==TEST==";
 static int settingsDirty = 0;
 
 #ifdef _DTL_T10000
@@ -143,8 +142,6 @@ int initSettings()
         getINIString(ini, &settings.bootPaths[0], "boot1", defaultBootPaths[0]);
         getINIString(ini, &settings.bootPaths[1], "boot2", defaultBootPaths[1]);
         getINIString(ini, &settings.bootPaths[2], "boot3", defaultBootPaths[2]);
-        getINIString(ini, &settings.bootPaths[3], "boot4", defaultBootPaths[3]);
-        getINIString(ini, &settings.bootPaths[4], "boot5", defaultBootPaths[4]);
     }
 
     migrateOldDatabaseSetting();
@@ -182,8 +179,6 @@ int killSettings()
     free(settings.bootPaths[0]);
     free(settings.bootPaths[1]);
     free(settings.bootPaths[2]);
-    free(settings.bootPaths[3]);
-    free(settings.bootPaths[4]);
 
     return 1;
 }
@@ -214,8 +209,6 @@ int settingsSave(char *error, int errorLen)
     fprintf(iniFile, "boot1 = %s\n", settings.bootPaths[0]);
     fprintf(iniFile, "boot2 = %s\n", settings.bootPaths[1]);
     fprintf(iniFile, "boot3 = %s\n", settings.bootPaths[2]);
-    fprintf(iniFile, "boot4 = %s\n", settings.bootPaths[3]);
-    fprintf(iniFile, "boot5 = %s\n", settings.bootPaths[4]);
 
     fclose(iniFile);
 
@@ -295,11 +288,6 @@ void settingsLoadBootMenu()
 
     menuItem_t *items = calloc(numPaths + 1, sizeof(menuItem_t));
     
-    /* Disc boot; default option
-    items[0].type = MENU_ITEM_NORMAL;
-    items[0].text = diskBootStr;
-    menuInsertItem(&items[0]);*/
-
     const char *text[] = {"Start Game", "Retrun To Dashboard", "Reboot Console"};
     int i;
     for(i = 0; i < numPaths; i++)

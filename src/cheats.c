@@ -47,10 +47,7 @@ static cheatDatabaseHandler_t cheatDatabaseHandlers[] = {
 
 static const char *HELP_TICKER_GAMES = \
     "{CROSS} Cheat List     "
-    "{SQUARE} Options     "
-    "{CIRCLE} Main Menu     "
-    "{L1}/{R1} Page Up/Down     "
-    "{L2}/{R2} Alphabetical Up/Down";
+    "{CIRCLE} Main Menu     ";
 
 static const char *HELP_TICKER_CHEATS = \
     "{CROSS} Enable/Disable Cheat     "
@@ -292,7 +289,7 @@ static int displayAddGame()
 
     populateGameHashTable();
     cheatDatabaseDirty = 1;
-    
+
     return 1;
 }
 
@@ -720,6 +717,15 @@ static int promptSaveToFormat(cheatDatabaseHandler_t **choice)
     return 0;
 }
 
+char* concat(const char *s1, const char *s2, const char *s3)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + strlen(s3) + 1); // +1 for the null-terminator
+    strcpy(result, s1);
+    strcat(result, s2);
+    strcat(result, s3);
+    return result;
+}
+
 // CheatDB --> Game --> Cheat --> Code
 int cheatsOpenDatabase(const char* path, int readOnly)
 {
@@ -780,6 +786,12 @@ int cheatsOpenDatabase(const char* path, int readOnly)
     populateGameHashTable();
     tagEnableCodes();
     updateTotalNumCheats();
+
+    if(numGames == 0)
+    {
+        char* message = concat("WARNING: No cheats found for the current game\n\nThe cheat database file for this game\nmay be missing or corrupt.\n\nEnsure that \'", path, "\' exists\nand contains properly formatted cheat codes.");
+        displayError(message);
+    }
 
     return 1;
 }
@@ -891,7 +903,7 @@ static void onValueMapSelected(const menuItem_t *selected)
     menuSetActive(MENU_CHEATS);
 }
 
-static void onDisplayGameContextMenu(const menuItem_t *selected)
+/*static void onDisplayGameContextMenu(const menuItem_t *selected)
 {
     cheatsGame_t *game = selected ? (cheatsGame_t *)selected->extra : NULL;
     if(numGames == 0 || (game && game->readOnly))
@@ -956,7 +968,7 @@ static void onDisplayGameContextMenu(const menuItem_t *selected)
             }
         }
     }
-}
+}*/
 
 static void onDisplayCheatContextMenu(const menuItem_t *selected)
 {
@@ -1033,7 +1045,7 @@ static void onDisplayCodeContextMenu(const menuItem_t *selected)
 int cheatsLoadGameMenu()
 {
     menuSetCallback(MENU_CALLBACK_AFTER_DRAW, cheatsDrawStats);
-    menuSetCallback(MENU_CALLBACK_PRESSED_SQUARE, onDisplayGameContextMenu);
+    //menuSetCallback(MENU_CALLBACK_PRESSED_SQUARE, onDisplayGameContextMenu);
     menuSetCallback(MENU_CALLBACK_PRESSED_CROSS, onGameSelected);
     menuSetHelpTickerText(HELP_TICKER_GAMES);
 
@@ -1268,13 +1280,10 @@ int cheatsToggleCheat(cheatsCheat_t *cheat)
 
 void cheatsDrawStats(const menuItem_t *selected)
 {
-    if(!activeGame || numEnabledCheats == 0)
-        return;
-
-    if(numEnabledCheats > 1)
-        graphicsDrawText(482, 25, COLOR_WHITE, "%i active cheats", numEnabledCheats);
+    if(numEnabledCheats == 1)
+        graphicsDrawText(460, 360, COLOR_WHITE, "%i active cheat", numEnabledCheats);
     else
-        graphicsDrawText(482, 25, COLOR_WHITE, "%i active cheat", numEnabledCheats);
+        graphicsDrawText(460, 360, COLOR_WHITE, "%i active cheats", numEnabledCheats);
 }
 
 int cheatsIsActiveGame(const cheatsGame_t *game)
