@@ -14,8 +14,9 @@
 static menuState_t menues[NUMMENUS];
 static menuState_t *activeMenu = NULL;
 static int initialized = 0;
-static char *menuTitleSaveMenu = "Save Manager";
-static char *menuTitleBootMenu = "Boot Paths";
+static char *menuTitleGames = "Cheats";
+static char *menuTitleBootMenu = "Launch";
+static char *oldTitle = "test";
 
 static const char *tempHelpTickerText = NULL;
 static int  tempHelpTickerLength = 0;
@@ -42,6 +43,7 @@ int initMenus()
         menues[MENU_SAVES].freeTextWhenRemoved = 1;
 
         activeMenu = &menues[MENU_GAMES];
+        activeMenu->text = menuTitleGames;
         initialized = 1;
 
         return 1;
@@ -72,12 +74,17 @@ int menuInsertItem(menuItem_t *item)
 {
     if(initialized)
     {
+        if (activeMenu->identifier == MENU_GAMES && oldTitle != "test"){
+            item->text = oldTitle;
+        }
+
         if(activeMenu->numItems == (activeMenu->numChunks * CHUNK_SIZE))
         {
             activeMenu->numChunks++;
             DPRINTF("increasing menu size to %d chunks\n", activeMenu->numChunks);
             activeMenu->items = realloc(activeMenu->items, CHUNK_SIZE * sizeof(menuItem_t *) * activeMenu->numChunks);
         }
+
 
         if(activeMenu->numItems == 0 || !activeMenu->isSorted)
         {
@@ -281,12 +288,30 @@ const char *menuGetActiveText()
 {
     return activeMenu->text;
 }
+
+char *truncString(char *str, int pos) {
+  size_t len = strlen(str);
+
+  if (len > abs(pos)) {
+    if (pos > 0)
+      str[pos] = 0;
+    else
+      str = &str[len] + pos;
+  } else {
+    return (char *)NULL;
+  }
+
+  return str;
+}
+
 void menuSetActiveText(const char *text)
 {
     if(!text)
         return;
 
-    activeMenu->text = text;
+    //oldTitle = activeMenu->text;
+    activeMenu->text = truncString(text, 29);
+    //activeMenu->text = text;
 }
 
 void *menuGetExtra(menuID_t id)
@@ -299,6 +324,8 @@ void *menuGetExtra(menuID_t id)
 
 int menuSetActive(menuID_t id)
 {
+    //activeMenu->text = oldTitle;
+
     if( id > NUMMENUS-1 )
         return 0;
 
@@ -309,14 +336,14 @@ int menuSetActive(menuID_t id)
 
     if(id == MENU_BOOT)
     {
-        //activeMenu->text = menuTitleBootMenu;
+        activeMenu->text = menuTitleBootMenu;
         menuRemoveAllItems();
         settingsLoadBootMenu();
     }
     
-    else if (id == MENU_SAVE_DEVICES)
+    else if (id == MENU_GAMES)
     {
-        activeMenu->text = menuTitleSaveMenu;
+        activeMenu->text = menuTitleGames;
     }
 
     return 1;
@@ -644,7 +671,8 @@ static void drawHelpTicker()
 static void drawTitle()
 {
     if(activeMenu->text)
-        graphicsDrawTextCentered(47, COLOR_WHITE, activeMenu->text);
+        graphicsDrawTextCentered(50, COLOR_WHITE, oldTitle);
+        graphicsDrawText(30, 47, COLOR_WHITE, activeMenu->text);
 }
 
 static void drawMenuItems()
@@ -700,7 +728,7 @@ static void drawMenuItems()
             }
             else
             {
-                graphicsDrawText(50, y, COLOR_GREEN, item->text);
+                graphicsDrawText(50, y, COLOR_YELLOW, item->text);
             }
 
             if(item->type == MENU_ITEM_HAMBURGER_BUTTON)

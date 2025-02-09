@@ -125,10 +125,10 @@ static void drawDecorations(const menuItem_t *selected)
     }
     
     if(s_currentDevice != FLASH_DRIVE)
-        graphicsDrawText(30, 47, COLOR_WHITE, "%d KB free", freeSpace);
+        graphicsDrawText(465, 360, COLOR_WHITE, "%d KB free", freeSpace);
 
     // TODO: Add menuSetTitle() to menu.c to set menu title for active menu.
-    graphicsDrawTextCentered(47, COLOR_WHITE, deviceName);
+    graphicsDrawText(30, 47, COLOR_WHITE, deviceName);
 }
 
 // Determine save handler by filename.

@@ -59,4 +59,6 @@ CheatHistory\.bin
 release/*
 !release/*CHEATS.zip
 .vscode/*
+*.bak
+*.xcf
 

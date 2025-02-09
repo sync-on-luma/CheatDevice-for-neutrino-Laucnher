@@ -643,7 +643,7 @@ static void drawPromptBox(float width, float height, u64 color)
 
 void graphicsDrawPromptBox(float width, float height)
 {
-    drawPromptBox(width, height, GS_SETREG_RGBAQ(0x22, 0x22, 0xEE, 0x60, 0x80));
+    drawPromptBox(width, height, GS_SETREG_RGBAQ(0x00, 0x00, 0x00, 0x10, 0x80));
 }
 
 void graphicsDrawPromptBoxBlack(float width, float height)
@@ -654,7 +654,7 @@ void graphicsDrawPromptBoxBlack(float width, float height)
 static void drawMenu(const menuIcon_t icons[], int numIcons, int activeItem)
 {
     int i;
-    const u64 unselected = GS_SETREG_RGBAQ(0x50, 0x50, 0x50, 0x20, 0x80);
+    const u64 unselected = GS_SETREG_RGBAQ(0x50, 0x50, 0x50, 0x40, 0x80);
     const u64 selected = GS_SETREG_RGBAQ(0x50, 0x50, 0x50, 0x80, 0x80);
     
     graphicsDrawPromptBox(350, 150);
@@ -682,8 +682,8 @@ static void drawMenu(const menuIcon_t icons[], int numIcons, int activeItem)
 void graphicsDrawMainMenu(int activeItem)
 {
     static const menuIcon_t icons[] = {
-        {"Start Game", &gamepad},
-        {"Game List", &cube},
+        {"Launch", &gamepad},
+        {"Cheats", &cube},
         {"Save Manager", &savemanager}
     };
     
@@ -843,24 +843,21 @@ int graphicsGetDisplayHeight()
 
 void graphicsDrawAboutPage()
 {
-    char msg[256];
+    char msg[512];
 
     const char *readOnlyPath = settingsGetReadOnlyDatabasePath();
     const char *readWritePath = settingsGetReadWriteDatabasePath();
 
     snprintf(msg, sizeof(msg),
-        "Cheat Device " GIT_VERSION "\n"
+        "Cheat Device for XEB+" GIT_VERSION "\n"
         "Compiled " __DATE__ " " __TIME__ "\n"
         "\n"
-        "Created by wesley castro, maintained by El_isra\n"
+         "Cheat Device created by wesley castro.\nXEB+ variant created by sync-on-luma(Y).\nBased on the fork maintained by El_isra.\n\n"
 #ifdef EXFAT
-"EXFAT:1 "
+"EXFAT: True"
 #endif
 #ifdef HDD
-"HDD:1"
-#endif
-#if defined(EXFAT) || defined(HDD)
-        "\n"
+"HDD: True"
 #endif
         "\n"
         "Total Games: %d\n"

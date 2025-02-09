@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        opts: ["", "HDD=1", "EXFAT=1", "MMCE=1"]
+        opts: ["", "HDD=1", "EXFAT=1"]
     runs-on: ubuntu-latest
     container: ps2dev/ps2dev:v1.0
     steps:
@@ -20,7 +20,7 @@ jobs:
       run: |
         apk add build-base git zip
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - run: |
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         git fetch --prune --unshallow --tags
@@ -34,9 +34,9 @@ jobs:
         ls -R
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
-        name: "${{ github.event.repository.name }}-${{ matrix.opts }}"
+        name: ${{ github.event.repository.name }}
         path: release/*.zip
     
 ####################################################### 
@@ -47,11 +47,7 @@ jobs:
     steps:
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: ${{ github.event.repository.name }}/
-        pattern: "${{ github.event.repository.name }}-*"
-        merge-multiple: true
+      uses: actions/download-artifact@v3
 
     - name: list
       run: |
@@ -59,7 +55,7 @@ jobs:
 
     - name: Create release
       if: github.ref == 'refs/heads/master'
-      uses: mathieucarbou/marvinpinto-action-automatic-releases@latest
+      uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
