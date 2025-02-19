@@ -16,7 +16,6 @@ static menuState_t *activeMenu = NULL;
 static int initialized = 0;
 static char *menuTitleGames = "Cheats";
 static char *menuTitleBootMenu = "Launch";
-static char *oldTitle = "test";
 
 static const char *tempHelpTickerText = NULL;
 static int  tempHelpTickerLength = 0;
@@ -74,10 +73,6 @@ int menuInsertItem(menuItem_t *item)
 {
     if(initialized)
     {
-        if (activeMenu->identifier == MENU_GAMES && oldTitle != "test"){
-            item->text = oldTitle;
-        }
-
         if(activeMenu->numItems == (activeMenu->numChunks * CHUNK_SIZE))
         {
             activeMenu->numChunks++;
@@ -293,12 +288,13 @@ char *truncString(char *str, int pos) {
   size_t len = strlen(str);
 
   if (len > abs(pos)) {
+    pos = len - pos;
+    pos = -pos;
+
     if (pos > 0)
-      str[pos] = 0;
+      str = str + pos;
     else
-      str = &str[len] + pos;
-  } else {
-    return (char *)NULL;
+      str[len + pos] = 0;
   }
 
   return str;
@@ -309,9 +305,8 @@ void menuSetActiveText(const char *text)
     if(!text)
         return;
 
-    //oldTitle = activeMenu->text;
-    activeMenu->text = truncString(text, 29);
-    //activeMenu->text = text;
+    text = truncString(text, 29);
+    activeMenu->text = text;
 }
 
 void *menuGetExtra(menuID_t id)
@@ -324,8 +319,6 @@ void *menuGetExtra(menuID_t id)
 
 int menuSetActive(menuID_t id)
 {
-    //activeMenu->text = oldTitle;
-
     if( id > NUMMENUS-1 )
         return 0;
 
@@ -345,7 +338,6 @@ int menuSetActive(menuID_t id)
     {
         activeMenu->text = menuTitleGames;
     }
-
     return 1;
 }
 
@@ -671,7 +663,6 @@ static void drawHelpTicker()
 static void drawTitle()
 {
     if(activeMenu->text)
-        graphicsDrawTextCentered(50, COLOR_WHITE, oldTitle);
         graphicsDrawText(30, 47, COLOR_WHITE, activeMenu->text);
 }
 
