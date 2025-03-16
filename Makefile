@@ -5,10 +5,11 @@
 
 DTL_T10000 ?= 0
 EXFAT ?= 1
+HDD ?= 1
 HOMEBREW_IRX ?= 1 #wether to use or not homebrew IRX for pad, memcard and SIO2. if disabled. rom0: drivers will be used. wich is not a safe option. as it makes using the program on protokernel PS2 dangerous (at least for memcard I/O)
 PRINTF = NONE
 RELDIR = release
-EE_BIN = CheatDevice$(HAS_EXFAT)$(HAS_HDD).ELF
+EE_BIN = CheatDevice$(HAS_EXFAT).ELF
 # For minizip
 EE_CFLAGS += -DUSE_FILE32API
 
